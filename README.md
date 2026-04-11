@@ -34,7 +34,7 @@ Hệ thống giám sát và tự động hóa khép kín (Closed-loop AIOps) dà
 
 ## Đối tượng hướng tới
 
-- **Operator/Admin (DevOps/Sysadmin/SRE gộp vai trò):** giảm thao tác xử lý sự cố lặp lại, giảm trực đêm.
+- **Operator/Admin (DevOps/Sysadmin/SRE):** giảm thao tác xử lý sự cố lặp lại, giảm trực đêm.
 - **Doanh nghiệp vừa và nhỏ (SMEs):** giám sát/tự động hóa nhưng không đủ ngân sách SaaS và không muốn dữ liệu ra Internet.
 
 ---
@@ -45,7 +45,7 @@ Hệ thống giám sát và tự động hóa khép kín (Closed-loop AIOps) dà
 ┌─────────────────────────┐
 │   Grafana Alerting      │
 │   ───────────────────   │
-│   Rule kích hoạt        │
+│   Điều kiện kích hoạt   │
 │   (vd: CPU > 90%)       │
 │   → POST webhook        │
 └───────────┬─────────────┘
@@ -68,8 +68,8 @@ Hệ thống giám sát và tự động hóa khép kín (Closed-loop AIOps) dà
 │ Tool    │  │ pending →   │  │ Telegram /   │
 │ whitelist│ │ Admin duyệt │  │ Email / SMS  │
 └────┬────┘  └──────┬──────┘  └──────┬───────┘
-     │              │                 │
-     └──────────────┴─────────────────┘
+     │              │                │
+     └──────────────┴────────────────┘
                     ▼
          ┌──────────────────────┐
          │  Audit & observability│
