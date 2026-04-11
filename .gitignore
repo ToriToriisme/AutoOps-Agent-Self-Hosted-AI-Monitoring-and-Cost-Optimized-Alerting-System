@@ -1,0 +1,19 @@
+# Cursor local (optional — bỏ dòng này nếu muốn đồng bộ cài đặt)
+.cursor/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local / secrets (add filenames if you store keys here)
+.env
+.env.*
+*.pem
+*.key
+
+# Python (if added later)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
