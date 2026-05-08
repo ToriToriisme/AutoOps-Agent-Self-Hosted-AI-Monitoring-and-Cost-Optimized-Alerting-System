@@ -1,0 +1,22 @@
+{
+  "tools": [
+    {
+      "name": "cleanup_temp_files",
+      "type": "powershell",
+      "script": "tools/powershell/cleanup_temp_files.ps1",
+      "args_schema": {
+        "TargetPath": "string",
+        "MaxFiles": "int?"
+      }
+    },
+    {
+      "name": "restart_service",
+      "type": "powershell",
+      "script": "tools/powershell/restart_service.ps1",
+      "args_schema": {
+        "ServiceName": "string"
+      }
+    }
+  ]
+}
+
