@@ -7,12 +7,6 @@ scrape_configs:
     static_configs:
       - targets: ["prometheus:9090"]
 
-  - job_name: "cadvisor"
+  - job_name: "windows_exporter"
     static_configs:
-      - targets: ["cadvisor:8080"]
-
-  # Placeholder for Day 3 (windows_exporter)
-  - job_name: "windows"
-    static_configs:
-      - targets: ["host.docker.internal:9182"]
-
+      - targets: ["host.docker.internal:9182", "192.168.2.246:9182"]
