@@ -2,4 +2,8 @@ fastapi
 uvicorn[standard]
 pydantic
 python-dotenv
+chromadb
+langchain-google-genai
+langchain-core
+requests
 
