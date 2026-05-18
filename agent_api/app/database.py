@@ -104,6 +104,15 @@ def update_agent_task_status(task_id: str, status: str) -> None:
     conn.commit()
     conn.close()
 
+def get_agent_task(task_id: str) -> dict | None:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM agent_tasks WHERE task_id = ?", (task_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
 
 def insert_audit_log(
     task_id: str,

@@ -29,11 +29,11 @@ else:
     print("[DEBUG] CẢNH BÁO: GOOGLE_API_KEY vẫn đang trống (None)!")
 
 
-from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException
+from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException, Request
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 
-from .database import init_db, insert_agent_task, insert_audit_log, update_agent_task_status
+from .database import init_db, insert_agent_task, insert_audit_log, update_agent_task_status, get_agent_task
 from .schemas.grafana_webhook import GrafanaWebhookPayload
 
 app = FastAPI(title="AutoOps Agent API", version="0.1.0")
@@ -62,7 +62,7 @@ whitelist_str = ", ".join(ALLOWED_TOOLS.keys())
 
 # Định nghĩa Prompt Template chuyên nghiệp cho DevOps Senior
 prompt_template = PromptTemplate.from_template(
-    "Bạn là một DevOps Senior. Hệ thống vừa có cảnh báo: [{alert_name}] (Trạng thái: {status}).\n"
+    "Bạn là một DevOps AI Assistant. Hệ thống vừa có cảnh báo: [{alert_name}] (Trạng thái: {status}).\n"
     "Mô tả chi tiết: {description}\n"
     "Event Logs hệ thống Windows gần đây (Nếu 'Không tìm thấy log...', hãy chỉ dựa vào Grafana): {event_logs}\n\n"
     "RÀNG BUỘC QUAN TRỌNG:\n"
@@ -318,9 +318,9 @@ def call_llm_triage(title: str, context: str, payload_dict: dict) -> tuple[str, 
         )
 
 
-def send_telegram_alert(payload: GrafanaWebhookPayload, ai_analysis: str = "") -> bool:
+def send_telegram_alert(payload: GrafanaWebhookPayload, alert_id: str = "", ai_analysis: str = "", proposed_action: str = "") -> bool:
     """
-    Gửi thông báo khẩn cấp tới Telegram kèm phân tích của AI.
+    Gửi thông báo khẩn cấp tới Telegram kèm phân tích của AI và Inline Keyboard.
     """
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
     chat_id = os.getenv("TELEGRAM_CHAT_ID")
@@ -330,28 +330,61 @@ def send_telegram_alert(payload: GrafanaWebhookPayload, ai_analysis: str = "") -
 
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     
-    # Soạn nội dung tin nhắn chuyên nghiệp
+    action_text = f"cách khắc phục được Agent đề xuất là : {proposed_action}" if proposed_action else ""
+    analysis_text = ai_analysis if ai_analysis else "Chưa có phân tích chi tiết."
+    
     text = (
-        f"🚨 **HỆ THỐNG PHÁT HIỆN SỰ CỐ** 🚨\n\n"
-        f"🔹 **Cảnh báo:** {payload.title}\n"
-        f"🔹 **Trạng thái:** {payload.status.upper()}\n\n"
-        f"🧠 **PHÂN TÍCH TỪ AI (DevOps Senior):**\n"
-        f"{ai_analysis if ai_analysis else 'AI đang bận, vui lòng kiểm tra log.'}"
-    )
+        f"Cảnh báo : {payload.title}\n"
+        f"Trạng thái : {payload.status.upper()}\n"
+        f"Vấn đề gặp phải : {analysis_text}\n"
+        f"{action_text}"
+    ).strip()
+    
+    payload_data = {"chat_id": chat_id, "text": text}
+    if alert_id:
+        payload_data["reply_markup"] = {
+            "inline_keyboard": [
+                [
+                    {"text": "Phê duyệt", "callback_data": f"approve_{alert_id}"},
+                    {"text": "Từ chối", "callback_data": f"reject_{alert_id}"}
+                ]
+            ]
+        }
     
     try:
         import requests
 
         # Bỏ parse_mode tạm thời để tránh lỗi sập API khi AI sinh ra ký tự lạ (Markdown không chuẩn)
-        resp = requests.post(
-            url, json={"chat_id": chat_id, "text": text}, timeout=5
-        )
+        resp = requests.post(url, json=payload_data, timeout=5)
         if resp.status_code != 200:
             print(f"[-] Lỗi gửi Telegram! HTTP {resp.status_code}: {resp.text}")
         return resp.status_code == 200
     except Exception as e:
         print(f"[-] Telegram notification failed: {str(e)}")
         return False
+
+def learn_from_resolution(alert_id: str, title: str, action: str, result: str, reason: str) -> None:
+    """
+    Log Learning: Học từ cách xử lý sự cố trước đó và đẩy vào ChromaDB.
+    """
+    try:
+        import chromadb
+        client = chromadb.PersistentClient(path="storage/chroma_db")
+        collection = client.get_or_create_collection("playbooks")
+        
+        doc_content = f"Sự cố: {title}. Đã xử lý bằng hành động: {action}. Kết quả: {result}. Lý do: {reason}"
+        metadata = {"urn": f"rag:playbook:learned:{alert_id}", "source": "auto_learning"}
+        
+        # Upsert vào ChromaDB
+        collection.upsert(
+            documents=[doc_content],
+            metadatas=[metadata],
+            ids=[f"learned_{alert_id}"]
+        )
+        print(f"[+] AI đã học từ task {alert_id} thành công.")
+    except Exception as e:
+        print(f"[-] Lỗi khi AI học từ độ phân giải: {str(e)}")
+
 
 
 # Hàm xử lý nghiệp vụ chạy ngầm
@@ -395,13 +428,14 @@ def process_alert_workflow(
             update_agent_task_status(alert_id, status)
 
         elif severity == "MEDIUM":
-            # Treo task lại, chờ Admin vào Dashboard duyệt
+            # Treo task lại, chờ Admin vào Dashboard duyệt hoặc qua Telegram
             status = "pending"
             update_agent_task_status(alert_id, status)
+            send_telegram_alert(payload, alert_id=alert_id, ai_analysis=decision_reason, proposed_action=proposed_action)
 
         elif severity == "CRITICAL":
-            # Không sửa tự động, gửi cảnh báo khẩn cấp kèm phân tích AI
-            send_telegram_alert(payload, ai_analysis=decision_reason)
+            # Không sửa tự động, gửi cảnh báo khẩn cấp kèm phân tích AI và đề xuất action
+            send_telegram_alert(payload, alert_id=alert_id, ai_analysis=decision_reason, proposed_action=proposed_action)
             notified_at = datetime.now(timezone.utc)
             status = "notified"
             update_agent_task_status(alert_id, status)
@@ -424,6 +458,10 @@ def process_alert_workflow(
             prompt_tokens=p_tokens,
             completion_tokens=c_tokens,
         )
+
+        # Nếu đã thực thi thành công (hoặc notified), cho AI tự học ngay lập tức
+        if status in ["executed", "notified"]:
+            learn_from_resolution(alert_id, payload.title, proposed_action, status, decision_reason)
 
         print(f"[{alert_id}] Processed successfully. Severity: {severity}. Status: {status}")
 
@@ -470,6 +508,83 @@ def ingest_grafana_webhook(
         "title": payload.title,
         "message": "Alert is being triaged by AI Agent in the background.",
     }
+
+
+@app.post("/api/v1/telegram/webhook")
+async def telegram_webhook(request: Request) -> dict:
+    """
+    Webhook nhận callback từ Telegram khi Admin bấm nút Approve / Reject
+    """
+    try:
+        data = await request.json()
+    except Exception:
+        return {"status": "ignored"}
+    
+    # Chỉ xử lý khi có callback_query (bấm nút)
+    if "callback_query" in data:
+        callback_query = data["callback_query"]
+        callback_data = callback_query.get("data", "")
+        message = callback_query.get("message", {})
+        chat_id = message.get("chat", {}).get("id")
+        message_id = message.get("message_id")
+        
+        # Xử lý approve hoặc reject
+        if callback_data.startswith("approve_") or callback_data.startswith("reject_"):
+            action, alert_id = callback_data.split("_", 1)
+            
+            # Lấy thông tin task từ DB
+            task = get_agent_task(alert_id)
+            if not task:
+                return {"status": "task_not_found"}
+                
+            if task["status"] not in ["pending", "notified"]:
+                # Tránh duyệt 2 lần
+                import requests
+                bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+                if bot_token and chat_id and message_id:
+                    requests.post(f"https://api.telegram.org/bot{bot_token}/sendMessage", json={
+                        "chat_id": chat_id,
+                        "text": f"Task {alert_id} đã được xử lý trước đó rồi! (Trạng thái hiện tại: {task['status']})"
+                    })
+                return {"status": "already_processed"}
+            
+            # Thực thi quyết định
+            import requests
+            bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+            new_text = message.get("text", "")
+            
+            if action == "approve":
+                proposed_action = task["proposed_action"]
+                import json
+                try:
+                    labels = json.loads(task["labels_json"])
+                except:
+                    labels = {}
+                    
+                execution_output = run_script(proposed_action, labels)
+                update_agent_task_status(alert_id, "executed")
+                
+                # Học từ kết quả
+                learn_from_resolution(alert_id, task["alert_title"], proposed_action, "executed", "Admin approved action")
+                
+                new_text += f"\n\nKẾT QUẢ PHÊ DUYỆT : ĐÃ DUYỆT VÀ THỰC THI\nOutput: {execution_output}"
+                
+            else: # reject
+                update_agent_task_status(alert_id, "rejected")
+                learn_from_resolution(alert_id, task["alert_title"], task["proposed_action"], "rejected", "Admin rejected action")
+                new_text += f"\n\nKẾT QUẢ PHÊ DUYỆT : ĐÃ TỪ CHỐI BỞI ADMIN"
+            
+            # Sửa lại tin nhắn cũ (ẩn nút bấm)
+            if bot_token and chat_id and message_id:
+                requests.post(f"https://api.telegram.org/bot{bot_token}/editMessageText", json={
+                    "chat_id": chat_id,
+                    "message_id": message_id,
+                    "text": new_text
+                })
+                
+            return {"status": f"processed_{action}"}
+            
+    return {"status": "ok"}
 
 
 
