@@ -2,71 +2,135 @@ name: AutoOps Agent CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f agent_api/requirements.txt ]; then pip install -r agent_api/requirements.txt; fi
+      - name: Install Linting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
 
-    - name: Run Integration Tests
-      env:
-        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        AGENT_API_KEY: ${{ secrets.AGENT_API_KEY }}
-      run: |
-        cd agent_api
-        python test_flows.py
+      - name: Run Linter (Flake8)
+        run: |
+          flake8 agent_api/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Security Scanner
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit
+
+      - name: Run Security Scan (Bandit)
+        run: |
+          bandit -r agent_api/ -x **/test_*.py --severity-level high
+
+  test:
+    needs: [lint, security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f agent_api/requirements.txt ]; then pip install -r agent_api/requirements.txt; fi
+
+      - name: Run Integration Tests
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          AGENT_API_KEY: ${{ secrets.AGENT_API_KEY }}
+        run: |
+          cd agent_api
+          python test_flows.py
 
   build-and-push:
-    needs: test  # Chỉ build và push khi chạy tests thành công
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write  # Yêu cầu quyền ghi vào GitHub Packages (GHCR)
+      packages: write
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Log in to GitHub Container Registry (GHCR)
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v4
-      with:
-        images: ghcr.io/${{ github.repository }}
-        tags: |
-          type=ref,event=branch
-          type=sha,format=short
-          latest
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short
+            latest
 
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./agent_api
-        file: ./agent_api/Dockerfile
-        push: ${{ github.event_name != 'pull_request' }}  # Không push nếu là Pull Request, chỉ push khi merge/push vào main
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./agent_api
+          file: ./agent_api/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  notify:
+    needs: [test, build-and-push]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Send Telegram Notification
+        run: |
+          STATUS="${{ needs.build-and-push.result }}"
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1 || echo "No commit message")
+          
+          if [ "$STATUS" = "success" ]; then
+            TEXT="AutoOps CI/CD: SUCCESS%0A%0ABranch: \`${{ github.ref_name }}\`%0ACommit: \`${{ github.sha }}\`%0AMessage: $COMMIT_MSG%0A%0ADocker image has been successfully pushed to GHCR!"
+          else
+            TEXT="AutoOps CI/CD: FAILED%0A%0ABranch: \`${{ github.ref_name }}\`%0ACommit: \`${{ github.sha }}\`%0A%0APlease check GitHub Actions logs for details."
+          fi
+          
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "text=$TEXT" \
+            -d "parse_mode=Markdown"
