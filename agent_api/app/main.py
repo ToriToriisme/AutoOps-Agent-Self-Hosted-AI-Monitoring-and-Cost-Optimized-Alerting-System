@@ -49,7 +49,7 @@ def on_startup() -> None:
 # Sử dụng Gemini 3.1 Flash Lite - Phiên bản mới nhất năm 
 llm = ChatGoogleGenerativeAI(
     model="gemini-3.1-flash-lite",
-    google_api_key=api_key,
+    google_api_key=api_key if api_key else "dummy_api_key",
     temperature=0.2,
 )
 
