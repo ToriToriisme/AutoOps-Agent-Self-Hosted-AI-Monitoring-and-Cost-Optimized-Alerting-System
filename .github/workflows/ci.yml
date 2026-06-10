@@ -1,4 +1,4 @@
-name: AutoOps Agent CI Pipeline
+name: AutoOps Agent CI/CD Pipeline
 
 on:
   push:
@@ -33,3 +33,40 @@ jobs:
       run: |
         cd agent_api
         python test_flows.py
+
+  build-and-push:
+    needs: test  # Chỉ build và push khi chạy tests thành công
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write  # Yêu cầu quyền ghi vào GitHub Packages (GHCR)
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Log in to GitHub Container Registry (GHCR)
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ghcr.io/${{ github.repository }}
+        tags: |
+          type=ref,event=branch
+          type=sha,format=short
+          latest
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./agent_api
+        file: ./agent_api/Dockerfile
+        push: ${{ github.event_name != 'pull_request' }}  # Không push nếu là Pull Request, chỉ push khi merge/push vào main
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
