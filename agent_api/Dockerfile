@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Tải trước mô hình Embedding ONNX cho ChromaDB (tránh lỗi race condition khi runtime)
+RUN python -c "from chromadb.utils.embedding_functions import DefaultEmbeddingFunction; DefaultEmbeddingFunction()"
+
 # Copy toàn bộ mã nguồn vào container
 COPY . .
 
