@@ -41,8 +41,86 @@ app = FastAPI(title="AutoOps Agent API", version="0.1.0")
 
 @app.on_event("startup")
 def on_startup() -> None:
-    # Tự động khởi tạo cấu trúc bảng SQLite khi khởi động server
+    # 1. Tự động khởi tạo cấu trúc bảng SQLite khi khởi động server
     init_db()
+
+    # 2. Tự động nạp Playbook/SOP vào ChromaDB nếu collection còn rỗng
+    # Đảm bảo AI luôn có kiến thức nền ngay từ lần đầu khởi động
+    try:
+        import chromadb
+        client = chromadb.PersistentClient(path="storage/chroma_db")
+        collection = client.get_or_create_collection("playbooks")
+        existing_count = collection.count()
+        if existing_count == 0:
+            print("[STARTUP] ChromaDB rỗng — Đang nạp Playbook/SOP mặc định...")
+            _seed_default_playbooks(collection)
+            print(f"[STARTUP] Đã nạp xong {collection.count()} Playbook vào ChromaDB.")
+        else:
+            print(f"[STARTUP] ChromaDB đã có sẵn {existing_count} Playbook — Bỏ qua seed.")
+    except Exception as e:
+        print(f"[STARTUP] Cảnh báo: Không thể khởi tạo ChromaDB: {e}")
+
+def _seed_default_playbooks(collection) -> None:
+    """Nạp bộ Playbook/SOP chuẩn vào ChromaDB khi khởi động lần đầu."""
+    PLAYBOOKS = [
+        {
+            "id": "pb_disk_001",
+            "document": (
+                "Tên sự cố: Disk Space Low / C Drive Low Space. Phân loại mức độ: SMALL. "
+                "Nguyên nhân: Thư mục Temp tích lũy file rác, file log hệ thống quá lớn. "
+                "Quy trình xử lý (SOP): Chạy cleanup_temp_files để dọn thư mục Temp và Cache. "
+                "Hành động đề xuất: cleanup_temp_files. Không cần phê duyệt Admin."
+            ),
+            "metadata": {"urn": "rag:playbook:disk:cleanup_001", "severity": "SMALL", "action": "cleanup_temp_files"},
+        },
+        {
+            "id": "pb_cpu_001",
+            "document": (
+                "Tên sự cố: CPU High / Windows CPU High / High CPU Usage. Phân loại mức độ: MEDIUM. "
+                "Nguyên nhân: Tiến trình bị treo (hang), ứng dụng rò rỉ bộ nhớ, service lặp vô hạn. "
+                "Quy trình xử lý (SOP): Đề xuất khởi động lại service liên quan. Bắt buộc phải có phê duyệt Admin trước. "
+                "Hành động đề xuất: restart_service. Yêu cầu phê duyệt Admin (Human-in-the-loop)."
+            ),
+            "metadata": {"urn": "rag:playbook:cpu:restart_001", "severity": "MEDIUM", "action": "restart_service"},
+        },
+        {
+            "id": "pb_service_down_001",
+            "document": (
+                "Tên sự cố: Windows Server Down / Service Down / Instance Down. Phân loại mức độ: CRITICAL. "
+                "Nguyên nhân: Mất điện đột ngột, lỗi phần cứng, kernel panic, hoặc tấn công mạng. "
+                "Quy trình xử lý (SOP): TUYỆT ĐỐI KHÔNG tự động can thiệp. "
+                "Ngay lập tức gửi cảnh báo khẩn cấp tới đội ngũ SRE on-call. Đội SRE kiểm tra trực tiếp. "
+                "Hành động đề xuất: Không có. Chỉ gửi cảnh báo."
+            ),
+            "metadata": {"urn": "rag:sop:server:critical_down_001", "severity": "CRITICAL", "action": ""},
+        },
+        {
+            "id": "pb_ram_001",
+            "document": (
+                "Tên sự cố: Memory High / RAM Usage High. Phân loại mức độ: MEDIUM. "
+                "Nguyên nhân: Memory leak trong ứng dụng, quá nhiều tiến trình đồng thời. "
+                "Quy trình xử lý (SOP): Ghi nhận process tiêu thụ RAM nhiều nhất, đề xuất restart service. "
+                "Bắt buộc có phê duyệt Admin trước khi thực thi. "
+                "Hành động đề xuất: restart_service. Yêu cầu phê duyệt Admin."
+            ),
+            "metadata": {"urn": "rag:playbook:memory:high_usage_001", "severity": "MEDIUM", "action": "restart_service"},
+        },
+        {
+            "id": "pb_network_001",
+            "document": (
+                "Tên sự cố: Network Down / Network Unreachable / Connection Lost. Phân loại mức độ: CRITICAL. "
+                "Nguyên nhân: Card mạng lỗi, cấu hình firewall sai, hoặc bị tấn công DDoS. "
+                "Quy trình xử lý (SOP): Không tự động can thiệp. Gửi cảnh báo khẩn cấp tới đội network on-call. "
+                "Hành động đề xuất: Không có. Chỉ gửi cảnh báo."
+            ),
+            "metadata": {"urn": "rag:sop:network:down_001", "severity": "CRITICAL", "action": ""},
+        },
+    ]
+    ids = [p["id"] for p in PLAYBOOKS]
+    docs = [p["document"] for p in PLAYBOOKS]
+    metas = [p["metadata"] for p in PLAYBOOKS]
+    collection.upsert(documents=docs, metadatas=metas, ids=ids)
+
 
 
 # --- PHẦN CẤU HÌNH AI (GEMINI) ---

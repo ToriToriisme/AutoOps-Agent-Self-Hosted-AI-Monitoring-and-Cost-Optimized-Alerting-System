@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  autoops-agent:
+    build:
+      context: ./agent_api
+      dockerfile: Dockerfile
+    container_name: autoops-agent
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./agent_api/.env
+    volumes:
+      # Mount storage ra ngoài máy host để bảo toàn dữ liệu khi restart
+      # ChromaDB (count = 12 sẽ được giữ nguyên sau docker stop/start)
+      - ./agent_api/storage:/app/storage
+    restart: unless-stopped
