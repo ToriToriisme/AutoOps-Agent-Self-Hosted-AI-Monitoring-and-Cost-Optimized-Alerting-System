@@ -1,0 +1,257 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{verbatim}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Kịch bản bảo vệ đồ án - AutoOps Agent},
+}
+
+\begin{document}
+
+\begin{center}
+    \LARGE \textbf{KỊCH BẢN BẢO VỆ ĐỒ ÁN — 10 PHÚT} \\
+    \vspace{0.5cm}
+    \large \textbf{AutoOps Agent — Self-Hosted AI Monitoring \& Cost-Optimized Alerting System} \\
+    \vspace{0.5cm}
+    \rule{\linewidth}{0.5mm}
+\end{center}
+
+\section{PHẦN 1: TRÌNH BÀY SLIDE ($\sim$2 phút)}
+
+\subsection{Slide 1 — Mục tiêu \& Chức năng (20s)}
+\begin{quote}
+    \textit{"Đề tài giải quyết bài toán vận hành IT truyền thống tốn thời gian và nhân lực. Em xây dựng AutoOps Agent – hệ thống tự giám sát, tự phân tích lỗi bằng AI và tự sửa lỗi khép kín."}
+\end{quote}
+
+\subsection{Slide 2 — Kiến trúc hệ thống (25s)}
+\begin{quote}
+    \textit{"Prometheus thu thập metrics $\rightarrow$ Grafana phát hiện lỗi $\rightarrow$ Webhook bắn về FastAPI $\rightarrow$ FastAPI phản hồi 200 OK ngay lập tức rồi đẩy tác vụ AI xuống BackgroundTasks xử lý ngầm."}
+\end{quote}
+
+\subsection{Slide 3 — AI RAG \& An toàn (30s)}
+\begin{quote}
+    \textit{"AI tra cứu Playbook từ ChromaDB (RAG) để giảm ảo giác. Bảo mật 2 lớp: Human-in-the-loop qua Telegram cho lỗi MEDIUM, và Whitelist Circuit Breaker chặn mọi lệnh ngoài danh sách trắng."}
+\end{quote}
+
+\subsection{Slide 4 — Kết quả (25s)}
+\begin{quote}
+    \textit{"Thời gian xử lý trung bình 4-5 giây, nhanh hơn 200 lần so với thủ công. Chi phí API chỉ $\sim$1.5 USD/tháng nhờ dùng Gemini Flash Lite."}
+\end{quote}
+
+\subsection{Slide 5 — Kết luận \& Slogan (20s)}
+\begin{quote}
+    \textit{"Automate the predictable, solve the exceptional. Sau đây em xin trình bày phần Demo thực tế ạ."}
+\end{quote}
+
+\newpage
+
+\section{PHẦN 2: GIỚI THIỆU DỰ ÁN \& CÔNG NGHỆ ($\sim$1.5 phút)}
+
+\textit{Mở VS Code hoặc Terminal, show cấu trúc cho giám khảo thấy tổng quan.}
+
+\subsection{Bước 1: Giới thiệu công nghệ cốt lõi \& Prometheus Targets}
+\begin{quote}
+    \textit{"Hệ thống sử dụng \textbf{Prometheus} làm cơ sở dữ liệu lưu trữ metrics theo dạng Pull-based. Trên giao diện Prometheus, khi truy cập vào \textbf{Status $\rightarrow$ Targets}, ta sẽ thấy trạng thái \textbf{UP (Healthy)} của \texttt{windows\_exporter} — điều này chứng minh Prometheus đang kéo metrics thành công từ máy chủ Windows. Đồng thời, các cảnh báo được quản lý tập trung qua Alertmanager hoặc Grafana Alerting, tự động bắn Webhook về Backend. Ở Backend, Ollama/Gemini đóng vai trò AI Agent để phân tích và ra quyết định tự động."}
+\end{quote}
+
+\subsection{Bước 2: Show cấu trúc thư mục}
+Gõ lệnh: \texttt{tree /F /A} hoặc chỉ trực tiếp trên VS Code Explorer.
+\begin{quote}
+    \textit{"Dự án của em gồm 4 thư mục chính: \texttt{agent\_api} chứa Backend FastAPI, \texttt{tools/powershell} chứa script sửa lỗi, \texttt{demo\_scripts} chứa các kịch bản test, và \texttt{observability} chứa cấu hình Prometheus \& Grafana."}
+\end{quote}
+
+\subsection{Bước 3: Mở Grafana Dashboard (nếu đang chạy)}
+Mở trình duyệt: \texttt{http://localhost:3000}
+\begin{quote}
+    \textit{"Đây là Dashboard giám sát Windows Server của em trên Grafana. Các biểu đồ hiển thị CPU, RAM, Disk Usage theo thời gian thực. Khi bất kỳ chỉ số nào vượt ngưỡng, Grafana sẽ tự động bắn Webhook cảnh báo về Backend API."}
+\end{quote}
+
+\subsection{Bước 4: Show các file source code quan trọng}
+
+\begin{longtable}{llp{7cm}}
+\toprule
+\textbf{File cần mở} & \textbf{Dòng cần chỉ} & \textbf{Nói gì} \\
+\midrule
+\end{longtable}
+\begin{longtable}{p{4.5cm}p{4cm}p{7cm}}
+\texttt{agent\_api/app/main.py} & Dòng 56-59 (\texttt{ALLOWED\_TOOLS}) & "Đây là danh sách trắng Whitelist, chỉ cho phép 2 script chạy" \\ \addlinespace
+\texttt{agent\_api/app/main.py} & Dòng 101-138 (\texttt{run\_script}) & "Circuit Breaker: nếu tool không nằm trong Whitelist $\rightarrow$ từ chối ngay" \\ \addlinespace
+\texttt{agent\_api/app/main.py} & Dòng 64-72 (\texttt{prompt\_template}) & "Prompt Template ép AI trả JSON chuẩn, tuân thủ Playbook RAG" \\ \addlinespace
+\texttt{agent\_api/app/main.py} & Dòng 439-484 (Phân nhánh SMALL/MEDIUM/CRITICAL) & "3 nhánh xử lý: SMALL tự sửa, MEDIUM chờ duyệt, CRITICAL chỉ cảnh báo" \\ \addlinespace
+\texttt{agent\_api/.env} & Toàn bộ & "File cấu hình Secret, không đẩy lên GitHub nhờ .gitignore" \\ \addlinespace
+\texttt{tools/powershell/cleanup\_temp\_files.ps1} & Hàm \texttt{Is-AllowedPath} & "Script chỉ cho phép xóa file trong thư mục Temp an toàn" \\
+\bottomrule
+\end{longtable}
+
+\newpage
+
+\section{PHẦN 3: LIVE DEMO ($\sim$3.5 phút)}
+
+\textit{Chuẩn bị: Terminal Docker đang chạy + Terminal PowerShell để gõ lệnh + Telegram trên điện thoại.}
+
+\subsection{Demo 1 — Lỗi SMALL — Tự động sửa (1 phút)}
+\textbf{Lệnh:} \texttt{powershell -ExecutionPolicy Bypass -File .\textbackslash{}demo\_scripts\textbackslash{}demo\_small\_error.ps1}
+\begin{quote}
+    \textit{"Em giả lập ổ đĩa C sắp đầy. Hệ thống nhận webhook, AI đánh giá SMALL, tự gọi script cleanup\_temp\_files dọn rác. Telegram nhận được báo cáo 'Tự động xử lý thành công' — không có nút bấm vì không cần duyệt."}
+\end{quote}
+\textbf{Giải thích Source Code:}
+\begin{itemize}
+    \item \textbf{Prompt cho script AI:} \texttt{main.py} (dòng 64-72) — biến \texttt{prompt\_template}.
+    \item \textbf{Hàm chạy Script:} \texttt{main.py} (dòng 101-138) — hàm \texttt{run\_script}.
+    \item \textbf{Phân nhánh SMALL:} \texttt{main.py} (dòng 439-470) — AI tự động chạy script.
+    \item \textbf{Lưu Database:} \texttt{database.py} (dòng 122-160) — hàm \texttt{insert\_agent\_task}.
+\end{itemize}
+\textbf{Show:} Log Docker hiện \texttt{Severity: SMALL. Status: executed} + Telegram báo cáo không nút bấm.
+
+\subsection{Demo 2 — Lỗi MEDIUM — Human-in-the-loop (1.5 phút)}
+\textbf{Lệnh:} \texttt{powershell -ExecutionPolicy Bypass -File .\textbackslash{}demo\_scripts\textbackslash{}demo\_medium\_error.ps1}
+\begin{quote}
+    \textit{"CPU quá tải. AI đề xuất restart service nhưng treo Pending chờ duyệt. Telegram hiện 2 nút Phê duyệt / Từ chối. Bây giờ em bấm Phê duyệt..."}
+\end{quote}
+\textbf{Giải thích Source Code:}
+\begin{itemize}
+    \item \textbf{Phân nhánh MEDIUM:} \texttt{main.py} (dòng 471-476) — Treo trạng thái 'pending' và gửi Telegram.
+    \item \textbf{Webhook Telegram nhận duyệt:} \texttt{main.py} (dòng 554-631) — hàm \texttt{telegram\_webhook}.
+    \item \textbf{Cập nhật Database:} \texttt{database.py} (dòng 162-181) — hàm \texttt{update\_agent\_task\_status}.
+\end{itemize}
+\textbf{Show:} Bấm Approve trên Telegram $\rightarrow$ nút biến mất $\rightarrow$ hiện kết quả thực thi.
+\begin{quote}
+    \textit{"Sau khi em duyệt, Backend gọi editMessageText xóa nút bấm, tránh bấm nhầm lần 2. Đây là cơ chế chống Race Condition."}
+\end{quote}
+
+\subsection{Demo 3 — Tấn công Hacker / Lỗi CRITICAL (1 phút)}
+\textbf{Lệnh:} \texttt{powershell -ExecutionPolicy Bypass -File .\textbackslash{}demo\_scripts\textbackslash{}demo\_hacker\_injection.ps1}
+\begin{quote}
+    \textit{"Hacker chèn lệnh rm -rf / vào payload Grafana. Quý thầy cô xem log Docker: lệnh bị Whitelist chặn đứng, không có script nào được thực thi. Hệ thống an toàn tuyệt đối."}
+\end{quote}
+\textbf{Giải thích Source Code:}
+\begin{itemize}
+    \item \textbf{Phân nhánh CRITICAL:} \texttt{main.py} (dòng 477-484) — Chỉ gửi báo động, không tự sửa.
+    \item \textbf{Bảo vệ Whitelist:} \texttt{main.py} (dòng 106-107) — Chặn lệnh nếu không có trong \texttt{ALLOWED\_TOOLS}.
+    \item \textbf{Ghi Audit Log:} \texttt{database.py} (dòng 197-256) — hàm \texttt{insert\_audit\_log} lưu bằng chứng.
+\end{itemize}
+\textbf{Show:} Log Docker hiện \texttt{ERROR: Tool 'rm -rf /' is not in ALLOWED\_TOOLS whitelist}
+
+\newpage
+
+\section{PHẦN 4: CÂU HỎI PHẢN BIỆN \& TRẢ LỜI}
+
+\subsection{Nhóm 1: Câu hỏi về Nội dung Báo cáo}
+
+\paragraph{Q: Tại sao chọn FastAPI mà không phải Flask hoặc Django?}
+\textbf{Trả lời:} FastAPI hỗ trợ async ngay từ đầu và có sẵn \texttt{BackgroundTasks} để đẩy tác vụ nặng ra nền. Flask thiếu tính năng này. Django thì quá nặng cho một Webhook API đơn giản. FastAPI cũng tự sinh tài liệu API (Swagger) tại \texttt{/docs}.
+
+\paragraph{Q: Hệ thống tự giám sát (self-monitoring) của em cụ thể là giám sát những gì?}
+\textbf{Trả lời:} Hệ thống tập trung giám sát 3 tầng của máy chủ Windows:
+\begin{enumerate}
+    \item \textbf{Tài nguyên phần cứng (OS Metrics):} CPU load, RAM, dung lượng ổ đĩa (Disk C:), băng thông mạng thông qua \texttt{windows\_exporter} thu thập gửi về Prometheus.
+    \item \textbf{Trạng thái các dịch vụ core (Service Health):} Cảnh báo khi các Service quan trọng (như Spooler, Docker, IIS) bị tắt hoặc treo.
+    \item \textbf{Log hệ thống (System Logs):} Lấy trực tiếp Windows Event Logs trong 15 phút gần nhất (dòng 141-182 trong \texttt{main.py}) để cung cấp cho AI làm ngữ cảnh chẩn đoán nguyên nhân gốc rễ.
+\end{enumerate}
+
+\paragraph{Q: RAG hoạt động như thế nào trong hệ thống?}
+\textbf{Trả lời:} Khi có cảnh báo, Backend truy vấn ChromaDB bằng tiêu đề lỗi để tìm Playbook phù hợp nhất. Playbook được nhúng vào Prompt gửi cho Gemini, ép AI tuân theo quy trình nội bộ. Sau mỗi lần xử lý thành công, hệ thống tự nạp ngược bài học vào ChromaDB (Self-Learning RAG).
+
+\paragraph{Q: Prompt Injection là gì và hệ thống phòng thủ thế nào?}
+\textbf{Trả lời:} Prompt Injection là kỹ thuật hacker chèn lệnh vào dữ liệu đầu vào để lừa AI. Em phòng thủ 2 lớp: (1) Prompt template ép AI chỉ trả JSON chuẩn; (2) Backend có \texttt{ALLOWED\_TOOLS} Whitelist chặn cứng mọi lệnh không hợp lệ — kể cả khi AI bị lừa.
+
+\paragraph{Q: Em đánh giá điểm mạnh nhất và điểm yếu nhất của đồ án?}
+\textbf{Trả lời:} \textbf{Điểm mạnh:} Kiến trúc phòng vệ 2 lớp (AI + Whitelist) đảm bảo an toàn tuyệt đối, RAG Self-Learning giúp AI tiến hóa liên tục. \textbf{Điểm yếu:} Hiện tại chỉ quản lý 1 máy chủ đơn lẻ, chưa hỗ trợ hạ tầng phân tán quy mô doanh nghiệp.
+
+\subsection{Nhóm 2: Câu hỏi về \texttt{main.py}}
+
+\paragraph{Q: Dòng 50-54 — Cấu hình AI model có ý nghĩa gì?}
+\textbf{Trả lời:} Block \texttt{llm = ChatGoogleGenerativeAI(...)} khởi tạo kết nối tới Gemini 3.1 Flash Lite với \texttt{temperature=0.2}. Temperature thấp giúp AI ổn định nhưng vẫn giữ chút linh hoạt, không cứng nhắc như 0 tuyệt đối.
+
+\paragraph{Q: Dòng 56-59 — ALLOWED\_TOOLS là gì? Tại sao chỉ có 2 script?}
+\textbf{Trả lời:} Đây là \textbf{danh sách trắng (Whitelist)}, chỉ cho phép 2 lệnh: \texttt{cleanup\_temp\_files} và \texttt{restart\_service}. Mọi lệnh khác — kể cả do AI đề xuất — đều bị từ chối. Đây là lớp phòng vệ cứng nhất của hệ thống.
+
+\paragraph{Q: Dòng 64-72 — Prompt Template ép AI trả kết quả kiểu gì?}
+\textbf{Trả lời:} Prompt ép AI phải trả JSON thuần với 3 key: \texttt{severity\_assessment}, \texttt{root\_cause\_analysis}, \texttt{suggested\_action}. Ràng buộc severity chỉ được SMALL/MEDIUM/CRITICAL, action phải nằm trong whitelist. Không được trả markdown hay giải thích thêm.
+
+\paragraph{Q: Dòng 74-79 — TRIAGE\_POLICY dùng để làm gì?}
+\textbf{Trả lời:} Đây là bảng định tuyến O(1) tra cứu nhanh. Mỗi loại alert được gán sẵn severity cứng: \texttt{Windows Server Down $\rightarrow$ CRITICAL}, \texttt{CPU High $\rightarrow$ MEDIUM}, \texttt{C: Drive Low Space $\rightarrow$ SMALL}. Dùng kết hợp với AI để đảm bảo routing chính xác.
+
+\paragraph{Q: Dòng 101-138 — Hàm run\_script hoạt động thế nào?}
+\textbf{Trả lời:} Đầu tiên kiểm tra \textbf{Circuit Breaker} (dòng 106-107): nếu tool không nằm trong \texttt{ALLOWED\_TOOLS} $\rightarrow$ từ chối ngay. Nếu hợp lệ, build command PowerShell, map tham số an toàn, chạy với timeout 15s. Trong Docker không có PowerShell sẽ trả kết quả giả lập (dòng 131-133).
+
+\paragraph{Q: Dòng 186-221 — Hàm query\_rag\_context làm gì?}
+\textbf{Trả lời:} Truy vấn ChromaDB lấy Playbook phù hợp nhất với tiêu đề lỗi. Nếu ChromaDB chưa có dữ liệu, fallback sang quy tắc cứng: disk $\rightarrow$ SMALL, down $\rightarrow$ CRITICAL, còn lại $\rightarrow$ MEDIUM. Trả về cả nội dung Playbook và URN tham chiếu.
+
+\paragraph{Q: Dòng 226-333 — Hàm call\_llm\_triage phức tạp thế nào?}
+\textbf{Trả lời:} Gọi Gemini phân loại lỗi. Bước 1: trích xuất mô tả từ payload. Bước 2: lấy Event Logs Windows. Bước 3: gọi LLM Chain. Bước 4: parse JSON bằng Pydantic. Bước 5: \textbf{Demo Safety Routing} (dòng 286-296) ép severity chính xác cho demo. Cuối cùng kiểm duyệt whitelist. Nếu mọi thứ fail $\rightarrow$ Fallback Rules (dòng 308-333).
+
+\paragraph{Q: Dòng 381-401 — learn\_from\_resolution là gì?}
+\textbf{Trả lời:} Đây là cơ chế \textbf{Self-Learning RAG}. Sau mỗi lần xử lý sự cố thành công, hệ thống tự tạo document mới và upsert vào ChromaDB. Lần sau gặp lỗi tương tự, AI sẽ tìm được bài học này qua RAG.
+
+\paragraph{Q: Dòng 439-484 — Phân nhánh SMALL/MEDIUM/CRITICAL khác nhau thế nào?}
+\textbf{Trả lời:} \textbf{SMALL (439-470):} Tự động chạy script + gửi Telegram báo cáo không có nút bấm. \textbf{MEDIUM (471-476):} Treo pending, gửi Telegram có 2 nút Approve/Reject. \textbf{CRITICAL (477-484):} Chỉ gửi cảnh báo khẩn cấp, không tự sửa.
+
+\paragraph{Q: Dòng 530-551 — Endpoint webhook nhận alert thế nào?}
+\textbf{Trả lời:} Endpoint \texttt{POST /api/v1/alerts/webhook} nhận payload từ Grafana, ghi nhận thời gian T0, tạo Alert ID duy nhất, rồi đẩy toàn bộ xử lý vào \texttt{BackgroundTasks}. Phản hồi 200 OK ngay lập tức cho Grafana không bị timeout.
+
+\paragraph{Q: Dòng 554-631 — Webhook Telegram xử lý nút bấm ra sao?}
+\textbf{Trả lời:} Nhận callback\_query khi Admin bấm Approve/Reject. Kiểm tra task có đang pending không (chống bấm 2 lần). Nếu Approve $\rightarrow$ gọi \texttt{run\_script} thực thi. Sau đó gọi \texttt{editMessageText} xóa nút bấm cũ để tránh Race Condition.
+
+\subsection{Nhóm 3: Câu hỏi về \texttt{database.py}}
+
+\paragraph{Q: Dòng 29-48 — get\_db\_connection hỗ trợ bao nhiêu loại DB?}
+\textbf{Trả lời:} Hỗ trợ 2 loại: \textbf{PostgreSQL} (cho production/cloud) và \textbf{SQLite} (cho local/demo). Biến \texttt{IS\_POSTGRES} (dòng 24) tự phát hiện dựa trên biến môi trường \texttt{DATABASE\_URL} hoặc \texttt{DB\_HOST}.
+
+\paragraph{Q: Dòng 51-119 — init\_db tạo những bảng gì?}
+\textbf{Trả lời:} Tạo 2 bảng: \textbf{agent\_tasks} (lưu thông tin task: severity, proposed\_action, status) và \textbf{audit\_logs} (lưu RAG context, decision reason, execution result, token count). Bảng audit\_logs có FK tới agent\_tasks.
+
+\paragraph{Q: Dòng 122-160 — insert\_agent\_task lưu gì vào DB?}
+\textbf{Trả lời:} Lưu bản ghi task mới gồm: task\_id, alert\_title, labels (JSON), severity, proposed\_action, status, và timestamp. Hàm này được gọi ở dòng 430 trong main.py ngay khi bắt đầu xử lý alert.
+
+\paragraph{Q: Dòng 162-181 — update\_agent\_task\_status dùng ở đâu?}
+\textbf{Trả lời:} Được gọi mỗi khi status thay đổi: từ \texttt{received $\rightarrow$ executed} (SMALL), \texttt{received $\rightarrow$ pending} (MEDIUM), \texttt{received $\rightarrow$ notified} (CRITICAL), hoặc \texttt{pending $\rightarrow$ executed/rejected} (sau khi Admin duyệt qua Telegram).
+
+\paragraph{Q: Dòng 183-194 — get\_agent\_task dùng khi nào?}
+\textbf{Trả lời:} Dùng trong Telegram webhook (main.py dòng 577) để kiểm tra task có tồn tại không và status hiện tại có phải pending/notified không — tránh duyệt 2 lần (Race Condition).
+
+\paragraph{Q: Dòng 197-256 — insert\_audit\_log ghi nhận những gì?}
+\textbf{Trả lời:} Ghi log đầy đủ: RAG context đã dùng, tham chiếu URN, lý do quyết định, kết quả thực thi, thời gian xử lý (ms), và \textbf{token tiêu thụ} (prompt\_tokens + completion\_tokens) để theo dõi chi phí LLM.
+
+\subsection{Nhóm 4: Công nghệ \& Thiết bị sử dụng}
+
+\paragraph{Q: Tại sao chọn Gemini mà không phải GPT-4 hoặc Claude?}
+\textbf{Trả lời:} Gemini 3.1 Flash Lite có giá API thấp nhất thị trường, tốc độ phản hồi nhanh nhất (SLA < 30s), đủ chính xác cho bài toán phân loại có RAG. GPT-4 đắt hơn 10-50 lần mà không vượt trội cho use case này.
+
+\paragraph{Q: Temperature = 0.2 nghĩa là gì? Sao không để 0?}
+\textbf{Trả lời:} Temperature kiểm soát tính ngẫu nhiên của AI. 0.2 rất ổn định nhưng giữ chút linh hoạt. Để 0 tuyệt đối thì câu trả lời quá cứng nhắc, đôi khi lặp lại y hệt và mất suy luận ngữ cảnh.
+
+\paragraph{Q: Nếu API Google bị mất mạng thì hệ thống có chết không?}
+\textbf{Trả lời:} Không. Em có \textbf{Fallback Rules} trong hàm \texttt{call\_llm\_triage} (main.py dòng 308-333). Khi API lỗi, hệ thống tự phân loại dựa trên từ khóa: disk $\rightarrow$ SMALL, down $\rightarrow$ CRITICAL, cpu $\rightarrow$ MEDIUM.
+
+\paragraph{Q: BackgroundTasks chạy trong bộ nhớ, server crash thì sao?}
+\textbf{Trả lời:} Đây là hạn chế của MVP. Production sẽ nâng cấp lên \textbf{Celery + Redis} để đảm bảo Persistence kể cả khi server restart.
+
+\subsection{Nhóm 5: Tối ưu \& Mở rộng}
+
+\paragraph{Q: Dự án có ứng dụng thực tế gì cho doanh nghiệp?}
+\textbf{Trả lời:} Doanh nghiệp vừa và nhỏ không đủ ngân sách thuê kỹ sư trực 24/7. AutoOps thay thế với chi phí $\sim$1.5 USD/tháng: giám sát liên tục, tự dọn rác, restart dịch vụ, cảnh báo khẩn qua Telegram.
+
+\paragraph{Q: Scale lên 50-100 máy chủ thì cần thay đổi gì?}
+\textbf{Trả lời:} Thay PowerShell cục bộ bằng \textbf{Ansible} hoặc \textbf{Kubernetes API}. Tích hợp \textbf{Grafana Loki + Promtail} để gom log tập trung. Backend giữ nguyên kiến trúc, chỉ thay đổi lớp thực thi.
+
+\paragraph{Q: Làm sao tối ưu chi phí LLM thêm nữa?}
+\textbf{Trả lời:} Em đã theo dõi token qua \texttt{prompt\_tokens} và \texttt{completion\_tokens} trong audit\_logs. Có thể tối ưu thêm bằng: (1) Cache RAG context tránh query lặp; (2) Dùng Ollama self-hosted thay API cloud; (3) Giảm prompt length bằng few-shot examples ngắn gọn.
+
+\vspace{1.5cm}
+\begin{center}
+    \textit{AutoOps Agent © 2026 — "Automate the predictable, solve the exceptional."}
+\end{center}
+
+\end{document}

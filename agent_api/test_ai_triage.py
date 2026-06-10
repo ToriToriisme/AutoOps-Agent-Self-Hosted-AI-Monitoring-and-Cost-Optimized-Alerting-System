@@ -8,7 +8,7 @@ client = TestClient(app)
 
 def run_tests():
     print("==================================================")
-    print("🤖 KHỞI CHẠY KIỂM THỬ AUTOOPS AI AGENT (DAY 11)")
+    print(" KHỞI CHẠY KIỂM THỬ AUTOOPS AI AGENT ")
     print("==================================================\n")
 
     print("=== TEST 1: LUỒNG BÌNH THƯỜNG (Happy Path) ===")
@@ -39,7 +39,7 @@ def run_tests():
     print(f"Response: {response_hack.json()}")
     print("\n--------------------------------------------------\n")
     
-    print("✅ TEST HOÀN TẤT. Vui lòng quan sát CONSOLE LOGS ở trên để xem Pydantic Validation và Fallback Policy hoạt động!")
+    print(" TEST HOÀN TẤT. Vui lòng quan sát CONSOLE LOGS ở trên để xem Pydantic Validation và Fallback Policy hoạt động!")
 
 if __name__ == "__main__":
     run_tests()

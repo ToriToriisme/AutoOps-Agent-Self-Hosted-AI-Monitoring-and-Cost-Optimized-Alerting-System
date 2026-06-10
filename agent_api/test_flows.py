@@ -19,8 +19,16 @@ class MockRequest:
 async def test_telegram_webhook_approve():
     print("--- Test Telegram Webhook Approve ---")
     
-    # 1. Tạo một pending task ảo trong DB
+    # 1. Tạo một pending task ảo trong DB (Xóa trước nếu đã tồn tại)
     test_alert_id = "ALT-TEST-12345"
+    from agent_api.app.database import get_db_connection
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM agent_tasks WHERE task_id = ?", (test_alert_id,))
+    cursor.execute("DELETE FROM audit_logs WHERE task_id = ?", (test_alert_id,))
+    conn.commit()
+    conn.close()
+    
     insert_agent_task(
         task_id=test_alert_id,
         alert_title="Test CPU High",
@@ -68,8 +76,16 @@ async def test_telegram_webhook_approve():
 async def test_telegram_webhook_reject():
     print("--- Test Telegram Webhook Reject ---")
     
-    # 1. Tạo một pending task ảo trong DB
+    # 1. Tạo một pending task ảo trong DB (Xóa trước nếu đã tồn tại)
     test_alert_id = "ALT-TEST-99999"
+    from agent_api.app.database import get_db_connection
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM agent_tasks WHERE task_id = ?", (test_alert_id,))
+    cursor.execute("DELETE FROM audit_logs WHERE task_id = ?", (test_alert_id,))
+    conn.commit()
+    conn.close()
+    
     insert_agent_task(
         task_id=test_alert_id,
         alert_title="Test DB Down",

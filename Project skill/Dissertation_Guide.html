@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoOps Agent - Ultimate Dissertation Blueprint (60 - 85 Pages)</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Mermaid.js for Dynamic Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            theme: 'dark',
+            startOnLoad: true,
+            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+            securityLevel: 'loose'
+        });
+    </script>
+
+    <style>
+        /* --- TOKENS (DESIGN.md inspired) --- */
+        :root {
+            --colors-bg-base: #080c14;
+            --colors-bg-surface: #0f172a;
+            --colors-bg-card: #1e293b;
+            --colors-border: #334155;
+
+            --colors-primary: #38bdf8;
+            --colors-primary-glow: rgba(56, 189, 248, 0.25);
+            --colors-primary-hover: #7dd3fc;
+
+            --colors-success: #34d399;
+            --colors-success-glow: rgba(52, 211, 153, 0.15);
+            --colors-warning: #fbbf24;
+            --colors-warning-glow: rgba(251, 191, 36, 0.15);
+            --colors-danger: #f87171;
+            --colors-danger-glow: rgba(248, 113, 113, 0.15);
+            --colors-purple: #a78bfa;
+            --colors-purple-glow: rgba(167, 139, 250, 0.15);
+
+            --colors-text-main: #f1f5f9;
+            --colors-text-muted: #94a3b8;
+
+            --rounded-sm: 4px;
+            --rounded-md: 8px;
+            --rounded-lg: 12px;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 48px;
+
+            --transition-speed: 0.25s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--colors-bg-base);
+            color: var(--colors-text-main);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        aside {
+            width: 300px;
+            background-color: var(--colors-bg-surface);
+            border-right: 1px solid var(--colors-border);
+            padding: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding-left: 5px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--colors-primary), var(--colors-purple));
+            border-radius: var(--rounded-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+            box-shadow: 0 0 15px var(--colors-primary-glow);
+        }
+
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, var(--colors-primary-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--colors-text-muted);
+            margin: 20px 0 8px 8px;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            color: var(--colors-text-muted);
+            text-decoration: none;
+            border-radius: var(--rounded-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
+            margin-bottom: 2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            background-color: var(--colors-bg-card);
+        }
+
+        .nav-link.active {
+            border-left: 3px solid var(--colors-primary);
+            background: linear-gradient(to right, rgba(56, 189, 248, 0.1), transparent);
+            padding-left: 11px;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        main {
+            margin-left: 300px;
+            padding: 40px;
+            flex-grow: 1;
+            max-width: 1250px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--colors-border);
+            padding-bottom: 25px;
+        }
+
+        .pre-title {
+            color: var(--colors-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            color: var(--colors-text-muted);
+            font-size: 0.85rem;
+        }
+
+        .meta-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--colors-bg-surface);
+            border: 1px solid var(--colors-border);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: var(--colors-text-main);
+        }
+
+        /* --- PLANNER --- */
+        .planner-card {
+            background: linear-gradient(135deg, var(--colors-bg-surface), #152033);
+            border: 1px solid var(--colors-border);
+            border-radius: var(--rounded-lg);
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .planner-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .planner-desc {
+            color: var(--colors-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 15px;
+            border-radius: var(--rounded-md);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .slider-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .range-slider {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--colors-border);
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--colors-primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--colors-primary-glow);
+        }
+
+        .counter-badge {
+            background: linear-gradient(135deg, var(--colors-primary), var(--colors-purple));
+            color: white;
+            font-weight: 800;
+            font-size: 1.35rem;
+            padding: 6px 16px;
+            border-radius: var(--rounded-md);
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .grid-budget {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .budget-item {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--rounded-md);
+            padding: 15px;
+        }
+
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .budget-ch-num {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--colors-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .budget-pages {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .budget-ch-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 4px;
+            background-color: var(--colors-border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--colors-primary), var(--colors-purple));
+            width: 0%;
+            transition: width 0.3s ease-out;
+        }
+
+        /* --- CONTENT SECTION --- */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in forwards;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            color: white;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--colors-border);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            color: #f1f5f9;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--colors-primary);
+            padding-left: 10px;
+        }
+
+        h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            color: #cbd5e1;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--colors-text-muted);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+            color: var(--colors-text-muted);
+            font-size: 0.95rem;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .highlight-text {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* --- STATS BOXES --- */
+        .info-box {
+            background-color: var(--colors-bg-surface);
+            border: 1px solid var(--colors-border);
+            border-radius: var(--rounded-lg);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-box.academic {
+            border-left: 4px solid var(--colors-primary);
+        }
+
+        .info-box.academic .info-box-title {
+            color: var(--colors-primary);
+        }
+
+        .info-box.image-tip {
+            border-left: 4px solid var(--colors-purple);
+        }
+
+        .info-box.image-tip .info-box-title {
+            color: var(--colors-purple);
+        }
+
+        .info-box.table-tip {
+            border-left: 4px solid var(--colors-warning);
+        }
+
+        .info-box.table-tip .info-box-title {
+            color: var(--colors-warning);
+        }
+
+        /* --- TABLES --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--colors-bg-surface);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid var(--colors-border);
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--colors-border);
+            color: var(--colors-text-muted);
+        }
+
+        tr:hover td {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .code-snippet {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #f472b6;
+            background-color: #0b0f19;
+            padding: 2px 6px;
+            border-radius: var(--rounded-sm);
+        }
+
+        /* --- MERMAID & CODE --- */
+        pre {
+            background-color: #05070c;
+            border: 1px solid var(--colors-border);
+            padding: 16px;
+            border-radius: var(--rounded-md);
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        pre code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .mermaid-container {
+            background-color: #05070c;
+            border: 1px solid var(--colors-border);
+            border-radius: var(--rounded-lg);
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            background-color: var(--colors-border);
+            color: var(--colors-text-main);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .tag-figure {
+            background-color: var(--colors-purple-glow);
+            color: #c084fc;
+            border: 1px solid var(--colors-purple);
+        }
+
+        .tag-table {
+            background-color: var(--colors-warning-glow);
+            color: #fbbf24;
+            border: 1px solid var(--colors-warning);
+        }
+
+        /* --- CARDS GRID --- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .outline-card {
+            background-color: var(--colors-bg-surface);
+            border: 1px solid var(--colors-border);
+            border-radius: var(--rounded-lg);
+            padding: 20px;
+            transition: all var(--transition-speed);
+        }
+
+        .outline-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--colors-primary);
+        }
+
+        .outline-card h4 {
+            margin-top: 0;
+            color: var(--colors-primary);
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .outline-card p {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 50px;
+            border-top: 1px solid var(--colors-border);
+            padding-top: 20px;
+            text-align: center;
+            color: var(--colors-text-muted);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="brand">
+            <div class="brand-logo">🎓</div>
+            <div class="brand-name">AutoOps Blueprint</div>
+        </div>
+
+        <div class="nav-section-title">Tổng quan</div>
+        <a href="#rules" class="nav-link active" onclick="switchSection(event, 'rules')">
+            <span class="nav-icon">📏</span> Quy chuẩn trình bày A4
+        </a>
+        <a href="#structure" class="nav-link" onclick="switchSection(event, 'structure')">
+            <span class="nav-icon">📊</span> Cấu trúc tổng quát (60-85tr)
+        </a>
+
+        <div class="nav-section-title">Nội dung 5 Chương chi tiết</div>
+        <a href="#ch1" class="nav-link" onclick="switchSection(event, 'ch1')">
+            <span class="nav-icon">1️⃣</span> Chương 1: Cơ sở lý thuyết
+        </a>
+        <a href="#ch2" class="nav-link" onclick="switchSection(event, 'ch2')">
+            <span class="nav-icon">2️⃣</span> Chương 2: Phân tích & Thiết kế
+        </a>
+        <a href="#ch3" class="nav-link" onclick="switchSection(event, 'ch3')">
+            <span class="nav-icon">3️⃣</span> Chương 3: Triển khai chi tiết
+        </a>
+        <a href="#ch4" class="nav-link" onclick="switchSection(event, 'ch4')">
+            <span class="nav-icon">4️⃣</span> Chương 4: Thực nghiệm & Kiểm thử
+        </a>
+        <a href="#ch5" class="nav-link" onclick="switchSection(event, 'ch5')">
+            <span class="nav-icon">5️⃣</span> Chương 5: Kết luận & Hướng đi
+        </a>
+
+        <div class="nav-section-title">Danh mục trực quan</div>
+        <a href="#figmap" class="nav-link" onclick="switchSection(event, 'figmap')">
+            <span class="nav-icon">📸</span> Danh mục 13 Hình vẽ
+        </a>
+        <a href="#tblmap" class="nav-link" onclick="switchSection(event, 'tblmap')">
+            <span class="nav-icon">📊</span> Danh mục 18 Bảng biểu
+        </a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <header>
+            <span class="pre-title">KHUNG LUẬN VĂN HỌC THUẬT CHI TIẾT (60 - 85 TRANG A4)</span>
+            <h1>Thiết Kế Cẩm Nang Luận Văn Cho AutoOps Agent SRE</h1>
+            <div class="header-meta">
+                <div class="meta-tag">📄 <strong>Cấu trúc:</strong> 5 Chương chuẩn UTC</div>
+                <div class="meta-tag">📐 <strong>Quy chuẩn:</strong> Times New Roman 13pt, 1.5 Lines</div>
+                <div class="meta-tag">📸 <strong>Hình vẽ:</strong> 13 hình</div>
+                <div class="meta-tag">📊 <strong>Bảng biểu:</strong> 18 bảng</div>
+            </div>
+        </header>
+
+        <!-- INTERACTIVE PLANNER -->
+        <section class="planner-card">
+            <div class="planner-title">⚙️ Bộ Định Biên Số Trang Luận Văn Tự Động (Mục tiêu: 60 - 85 trang)</div>
+            <div class="planner-desc">Kéo thanh trượt để điều chỉnh tổng số trang mục tiêu. Hệ thống sẽ tự động tính
+                toán số trang cho từng chương dựa trên tỉ lệ chuẩn hóa từ báo cáo mẫu PhoBERT đã phân tích.</div>
+
+            <div class="slider-container">
+                <span class="slider-label">Mục tiêu trang:</span>
+                <input type="range" min="60" max="85" value="75" class="range-slider" id="page-slider"
+                    oninput="calculatePages(this.value)">
+                <div class="counter-badge" id="page-count-val">75 trang</div>
+            </div>
+
+            <div class="grid-budget">
+                <div class="budget-item">
+                    <div class="budget-header">
+                        <span class="budget-ch-num">Mở đầu & Phụ lục</span>
+                        <span class="budget-pages" id="ch0-budget">5 trang</span>
+                    </div>
+                    <div class="budget-ch-name">Lời cảm ơn, Cam đoan, Mục lục</div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="ch0-bar"></div>
+                    </div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-header">
+                        <span class="budget-ch-num">Chương 1</span>
+                        <span class="budget-pages" id="ch1-budget">17 trang</span>
+                    </div>
+                    <div class="budget-ch-name">Cơ sở lý thuyết</div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="ch1-bar"></div>
+                    </div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-header">
+                        <span class="budget-ch-num">Chương 2</span>
+                        <span class="budget-pages" id="ch2-budget">22 trang</span>
+                    </div>
+                    <div class="budget-ch-name">Phân tích & Thiết kế</div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="ch2-bar"></div>
+                    </div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-header">
+                        <span class="budget-ch-num">Chương 3</span>
+                        <span class="budget-pages" id="ch3-budget">17 trang</span>
+                    </div>
+                    <div class="budget-ch-name">Triển khai chi tiết</div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="ch3-bar"></div>
+                    </div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-header">
+                        <span class="budget-ch-num">Chương 4</span>
+                        <span class="budget-pages" id="ch4-budget">11 trang</span>
+                    </div>
+                    <div class="budget-ch-name">Thực nghiệm & Kiểm thử</div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="ch4-bar"></div>
+                    </div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-header">
+                        <span class="budget-ch-num">Chương 5</span>
+                        <span class="budget-pages" id="ch5-budget">3 trang</span>
+                    </div>
+                    <div class="budget-ch-name">Kết luận & Hướng đi</div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="ch5-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= RULES SECTION ================= -->
+        <section id="rules" class="content-section active">
+            <h2>📐 Quy Chuẩn Trình Bày Luận Văn A4 Chuẩn</h2>
+            <p>Dựa trên khuôn mẫu báo cáo tốt nghiệp chính thức của sinh viên Trường Đại học Giao thông Vận tải TP.HCM
+                (UTC), định dạng văn bản trong Microsoft Word hoặc LaTeX của bạn bắt buộc phải tuân thủ nghiêm ngặt các
+                quy tắc trình bày sau để đảm bảo tính thẩm mỹ khoa học:</p>
+
+            <div class="card-grid">
+                <div class="outline-card">
+                    <h4>🔤 Font chữ & Cỡ chữ</h4>
+                    <p>Sử dụng duy nhất font chữ <strong>Times New Roman</strong>. Cỡ chữ phần nội dung là
+                        <strong>13pt</strong>. Các đề mục chính (Chương, Mục lớn) có thể dùng cỡ 14pt - 16pt (In đậm).
+                    </p>
+                </div>
+                <div class="outline-card">
+                    <h4>↔️ Giãn dòng & Giãn đoạn</h4>
+                    <p>Giãn cách dòng (Line Spacing): <strong>1.5 lines</strong>. Giãn cách đoạn (Paragraph Spacing):
+                        Before: <strong>6pt</strong>, After: <strong>6pt</strong>. Không dùng phím Enter xuống dòng hai
+                        lần để tạo khoảng trống.</p>
+                </div>
+                <div class="outline-card">
+                    <h4>📐 Căn lề trang giấy (Margins)</h4>
+                    <p>Lề trên: <strong>2.0 - 2.5 cm</strong><br>Lề dưới: <strong>2.0 - 2.5 cm</strong><br>Lề trái:
+                        <strong>3.0 - 3.5 cm</strong> (để chừa khoảng đóng gáy)<br>Lề phải: <strong>2.0 cm</strong></p>
+                </div>
+                <div class="outline-card">
+                    <h4>🏷️ Nhãn hình vẽ & Bảng biểu</h4>
+                    <p>Mọi hình ảnh/bảng biểu phải được đánh số và gắn nhãn theo chương. Ví dụ: <em>Hình 3.1: Kiến trúc
+                            tổng quan</em> (nằm ở dưới hình), <em>Bảng 2.1: Các mức độ sự cố</em> (nằm ở trên bảng).</p>
+                </div>
+            </div>
+
+            <div class="info-box academic">
+                <div class="info-box-title">🎓 Yêu cầu học thuật về lập luận khoa học:</div>
+                <p>Tuyệt đối tránh sử dụng các ngôn ngữ mang tính cảm xúc như "rất tốt", "cực kỳ hoàn hảo", "nhanh khủng
+                    khiếp". Thay vào đó, hãy viết theo lối phân tích định lượng khách quan. Ví dụ: Thay vì viết <em>"Hệ
+                        thống phản hồi cực nhanh giúp tiết kiệm thời gian"</em>, hãy viết: <em>"Thời gian phản hồi sự cố
+                        trung bình (MTTR) qua kiểm nghiệm thực tế giảm từ 1800 giây (đối với quy trình xử lý thủ công)
+                        xuống còn 6.8 giây khi áp dụng mô hình phân loại tự động kết hợp AI, tương đương mức cải thiện
+                        99.6%."</em></p>
+            </div>
+        </section>
+
+        <!-- ================= STRUCTURE SECTION ================= -->
+        <section id="structure" class="content-section">
+            <h2>📊 Cấu Trúc Tổng Quát Phân Bổ Luận Văn</h2>
+            <p>Để đạt quy mô từ <strong>60 đến 85 trang A4</strong>, luận văn của bạn sẽ được thiết lập theo cấu trúc 5
+                chương chính (không tính Lời mở đầu, Mục lục và Tài liệu tham khảo). Dưới đây là phân bổ nội dung và ước
+                lượng số trang:</p>
+
+            <div class="card-grid">
+                <div class="outline-card">
+                    <h4>Chương 1: Cơ Sở Lý Thuyết và Công Nghệ</h4>
+                    <p><strong>Mục tiêu:</strong> Thiết lập nền tảng lý thuyết vững chắc về giám sát, LLM, RAG và các
+                        công nghệ sử dụng trong hệ thống.</p>
+                    <p><strong>Ước lượng:</strong> 15 - 20 trang | 4 hình vẽ | 2 bảng số liệu</p>
+                </div>
+                <div class="outline-card">
+                    <h4>Chương 2: Phân Tích, Thiết Kế và Kiến Trúc Hệ Thống</h4>
+                    <p><strong>Mục tiêu:</strong> Đặc tả yêu cầu chức năng, thiết kế ma trận sự cố, kiến trúc tổng quan
+                        và thiết kế ERD database.</p>
+                    <p><strong>Ước lượng:</strong> 20 - 25 trang | 5 hình vẽ | 5 bảng số liệu</p>
+                </div>
+                <div class="outline-card">
+                    <h4>Chương 3: Triển Khai và Xây Dựng Chi Tiết</h4>
+                    <p><strong>Mục tiêu:</strong> Trình bày chi tiết mã nguồn backend FastAPI, logic RAG, prompt cho LLM
+                        và tích hợp Telegram API.</p>
+                    <p><strong>Ước lượng:</strong> 15 - 20 trang | 2 hình vẽ | 3 bảng số liệu</p>
+                </div>
+                <div class="outline-card">
+                    <h4>Chương 4: Thực Nghiệm và Kiểm Thử Hệ Thống</h4>
+                    <p><strong>Mục tiêu:</strong> Trình bày 4 kịch bản kiểm thử lỗi thực tế và đưa ra các chỉ số đánh
+                        giá hiệu năng (SLA, MTTR, Tokens).</p>
+                    <p><strong>Ước lượng:</strong> 10 - 15 trang | 2 hình vẽ | 8 bảng số liệu</p>
+                </div>
+                <div class="outline-card">
+                    <h4>Chương 5: Kết Luận và Hướng Phát Triển</h4>
+                    <p><strong>Mục tiêu:</strong> Tổng hợp các kết quả đạt được, hạn chế kỹ thuật hiện tại và vạch ra
+                        định hướng mở rộng.</p>
+                    <p><strong>Ước lượng:</strong> 3 - 5 trang | 0 hình vẽ | 0 bảng số liệu</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CH1 SECTION ================= -->
+        <section id="ch1" class="content-section">
+            <h2>Chương 1: Cơ Sở Lý Thuyết và Công Nghệ</h2>
+            <p><strong>Định biên trang:</strong> 15 - 20 trang. Đây là chương giúp bạn thể hiện kiến thức học thuật tổng
+                quan.</p>
+
+            <h3>1.1 Tổng quan về giám sát hệ thống (Observability) và AIOps</h3>
+            <p>Trình bày định nghĩa và sự khác biệt giữa Giám sát (Monitoring - theo dõi các chỉ số tĩnh) và Khả năng
+                quan sát (Observability - hiểu rõ trạng thái bên trong thông qua Metrics, Logs, Traces). Định nghĩa về
+                xu hướng <strong>AIOps</strong> (Artificial Intelligence for IT Operations) và cách nó giúp tự động hóa
+                quá trình phát hiện và phản hồi lỗi khép kín (closed-loop).</p>
+
+            <h3>1.2 Bài toán tự động phân loại và khắc phục sự cố (Auto-Remediation)</h3>
+            <p>Phân tích những hạn chế của quy trình xử lý sự cố truyền thống (phụ thuộc 100% vào con người trực ca, độ
+                trễ MTTR lớn, Alert Fatigue). Định nghĩa khái niệm <strong>Auto-Remediation</strong> (Tự động phục hồi)
+                và việc giới hạn phạm vi xử lý tự động trong môi trường doanh nghiệp để đảm bảo an toàn.</p>
+
+            <h3>1.3 Mô hình ngôn ngữ lớn (LLM) dưới vai trò SRE Agent</h3>
+            <p>Phân tích khả năng của LLM trong việc đọc hiểu các dữ liệu phi cấu trúc như logs hệ thống, Event Logs, mô
+                tả lỗi và suy luận nguyên nhân gốc rễ (Root Cause Analysis). So sánh ưu/nhược điểm giữa việc dùng các mô
+                hình Cloud lớn (như Gemini) với các mô hình chạy Local (như Llama, Mistral qua Ollama) về chi phí và an
+                toàn dữ liệu.</p>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 1.1: So sánh đặc tính các mô hình LLM dưới vai trò SRE Agent</strong>. Bảng này so
+                    sánh: OpenAI GPT-4o, Google Gemini 3.1 Flash Lite, Llama-3-8B Local và Mistral-7B Local dựa trên các
+                    tiêu chí: Chi phí API, Tốc độ phản hồi (Latency), Mức độ bảo mật dữ liệu, Khả năng suy luận ngữ cảnh
+                    lỗi.</p>
+            </div>
+
+            <h3>1.4 Công nghệ RAG (Retrieval-Augmented Generation) & Vector Database</h3>
+            <p>Giải thích tại sao LLM không thể nhớ hết các cẩm nang xử lý sự cố (Playbooks) nội bộ do giới hạn cửa sổ
+                ngữ cảnh (Context Window) hoặc dữ liệu tĩnh. Trình bày chi tiết cơ chế RAG:</p>
+            <ul>
+                <li><strong>Indexing:</strong> Nạp dữ liệu Playbook dạng văn bản, cắt nhỏ (Chunking) với kỹ thuật
+                    Overlap, chuyển đổi thành Vector Embedding.</li>
+                <li><strong>Vector Database:</strong> Lưu trữ vector vào ChromaDB để tìm kiếm nhanh chóng.</li>
+                <li><strong>Retrieval:</strong> Tính toán độ tương đồng (Cosine Similarity) giữa vector tên cảnh báo lỗi
+                    và các vector playbook.</li>
+            </ul>
+
+            <div class="info-box image-tip">
+                <div class="info-box-title">📸 Hình vẽ cần chèn tại đây:</div>
+                <p>Chèn <strong>Hình 1.1: Quy trình hoạt động của kỹ thuật RAG trong tìm kiếm tài liệu hướng dẫn
+                        (Playbook)</strong>. Vẽ sơ đồ luồng dữ liệu từ file text playbook -> chunking -> embedding ->
+                    ChromaDB -> so khớp truy vấn lỗi -> trả về ngữ cảnh cho LLM.</p>
+            </div>
+
+            <h3>1.5 Các chỉ số đánh giá hiệu năng</h3>
+            <p>Giải thích chi tiết các chỉ số KPI vận hành thực tế:</p>
+            <ul>
+                <li><strong>MTTR (Mean Time to Resolution):</strong> Thời gian trung bình từ lúc sự cố phát sinh đến khi
+                    được khắc phục thành công.</li>
+                <li><strong>SLA (Service Level Agreement):</strong> Cam kết thời gian phản hồi cảnh báo lỗi của Agent
+                    (Mục tiêu thiết kế: &lt; 30 giây).</li>
+                <li><strong>Token Consumption & API Cost:</strong> Đo lường lượng token đầu vào/đầu ra để tính toán chi
+                    phí vận hành thực tế của hệ thống.</li>
+            </ul>
+
+            <h3>1.6 Công nghệ sử dụng trong hệ thống</h3>
+            <p>Trình bày vai trò của từng công nghệ trong dự án: Python (ngôn ngữ chính), FastAPI (Backend API),
+                Prometheus (Thu thập metrics), Grafana (Dashboard & Alerting engine), ChromaDB (Vector DB cho RAG),
+                SQLite (Cơ sở dữ liệu lưu audit logs và tasks), Telegram Bot API (Kênh giao tiếp phê duyệt).</p>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 1.2: Các công nghệ sử dụng trong hệ thống AutoOps Agent</strong>. Cột 1: Công
+                    nghệ/Thư viện, Cột 2: Phiên bản, Cột 3: Mục đích sử dụng cụ thể trong dự án của bạn.</p>
+            </div>
+        </section>
+
+        <!-- ================= CH2 SECTION ================= -->
+        <section id="ch2" class="content-section">
+            <h2>Chương 2: Phân Tích, Thiết Kế và Kiến Trúc Hệ Thống</h2>
+            <p><strong>Định biên trang:</strong> 20 - 25 trang. Chương này tập trung vào sơ đồ thiết kế hệ thống, sơ đồ
+                tuần tự và cơ sở dữ liệu.</p>
+
+            <h3>2.1 Phân tích bài toán vận hành hệ thống</h3>
+            <p>Phân tích chi tiết quy trình xử lý lỗi khi chưa có AutoOps: Sự cố phát sinh trên máy chủ -> Cào metrics
+                -> Bắn mail cảnh báo -> Kỹ sư nhận tin -> Đăng nhập máy chủ -> Chạy lệnh tìm lỗi -> Chạy lệnh sửa ->
+                Khôi phục dịch vụ. Chỉ ra các điểm gây nghẽn thời gian lớn nhất ở khâu phản hồi của con người.</p>
+
+            <div class="info-box image-tip">
+                <div class="info-box-title">📸 Hình vẽ cần chèn tại đây:</div>
+                <p>Chèn <strong>Hình 2.1: Sơ đồ luồng thời gian trễ của quy trình DevOps thủ công truyền thống</strong>.
+                    Biểu diễn dòng thời gian (timeline) phân rã các bước và độ trễ tích lũy.</p>
+            </div>
+
+            <h3>2.2 Bộ nhãn phân loại sự cố (Triage Matrix)</h3>
+            <p>Đặc tả ma trận quyết định phân loại sự cố của hệ thống theo 3 cấp độ: 🟢 SMALL, 🟡 MEDIUM, 🔴 CRITICAL.
+                Giải thích lý do phân loại: Sự cố SMALL có rủi ro thấp nên chạy tự động; sự cố MEDIUM liên quan dịch vụ
+                nên cần con người kiểm soát phê duyệt; sự cố CRITICAL nguy cơ hỏng hạ tầng nên chỉ phân tích và gửi báo
+                động đỏ.</p>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 2.1: Ma trận phân loại sự cố hệ thống (Triage Matrix)</strong>. Gồm các cột: Mức
+                    độ, Điều kiện kích hoạt (Ví dụ: CPU &gt; 90% hoặc Disk &lt; 10%), Hành động tự động, Vai trò của
+                    Admin, Rủi ro hệ thống.</p>
+            </div>
+
+            <h3>2.3 Yêu cầu chức năng</h3>
+            <p>Phân tích đặc tả yêu cầu chức năng (Functional Requirements) cho 5 phân hệ chính của hệ thống:</p>
+            <ul>
+                <li><strong>Phân hệ Webhook Alert:</strong> Nhận webhook, giải mã payload và xác thực API Key.</li>
+                <li><strong>Phân hệ AI Triage:</strong> Tích hợp RAG tìm playbook, gọi LLM phân tích log và đưa ra quyết
+                    định phân loại mức độ.</li>
+                <li><strong>Phân hệ Duyệt Telegram:</strong> Gửi thông báo kèm nút phê duyệt Approve/Reject, tiếp nhận
+                    callback phản hồi từ Telegram.</li>
+                <li><strong>Phân hệ Audit Log:</strong> Ghi nhận mọi bước xử lý sự cố, lưu trữ dữ liệu hiệu năng và chi
+                    phí token.</li>
+                <li><strong>Phân hệ Log Learning:</strong> Tự động học hỏi kết quả xử lý trước đó và cập nhật vào
+                    ChromaDB.</li>
+            </ul>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 2.2: Đặc tả các ca sử dụng (Use Case Specs) của hệ thống</strong>. Liệt kê các ca
+                    sử dụng chính: Nhận cảnh báo, Phê duyệt hành động, Xem nhật ký hoạt động, Cấu hình Whitelist.</p>
+            </div>
+
+            <h3>2.4 Yêu cầu phi chức năng</h3>
+            <p>Đặc tả các chỉ số chất lượng hệ thống:</p>
+            <ul>
+                <li><strong>Tính an toàn (Security):</strong> Không cho phép AI tự động thực thi các lệnh ngoài
+                    whitelist; xác thực API key nghiêm ngặt đối với webhook đầu vào.</li>
+                <li><strong>Độ tin cậy & Chịu lỗi (Fault Tolerance):</strong> Nếu API Gemini bị lỗi hoặc sập mạng, hệ
+                    thống phải kích hoạt chính sách quy tắc dự phòng tĩnh (Fallback Policy) lập tức mà không làm treo hệ
+                    thống.</li>
+                <li><strong>Độ trễ (Latency):</strong> Thời gian phản hồi phản hồi webhook nhỏ hơn 0.5s (chuyển xử lý
+                    nặng vào Background Tasks).</li>
+            </ul>
+
+            <h3>2.5 Kiến trúc tổng quan hệ thống (Closed-loop Architecture)</h3>
+            <p>Mô tả chi tiết mối quan hệ giữa các thành phần. Sơ đồ kiến trúc tổng quan được thể hiện qua sơ đồ
+                Mermaid.js dưới đây:</p>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TD
+                    A[Grafana Monitor] -->|1. Webhook Post| B[FastAPI Backend]
+                    B -->|2. Query Context| C[(ChromaDB RAG)]
+                    C -->|3. Playbook Info| B
+                    B -->|4. Get Windows Event Logs| D[Windows OS]
+                    D -->|5. Return Clean Logs| B
+                    B -->|6. Call LLM Triage| E[Gemini 3.1 Flash Lite]
+                    E -->|7. Return JSON Assessment| B
+                    B -->|8. Match Whitelist| F{Action Dispatcher}
+                    F -->|SMALL: Auto-run| G[Run Script]
+                    F -->|MEDIUM: Pending| H[Telegram Callback Bot]
+                    F -->|CRITICAL: Notify| I[Red Alert Telegram]
+                    H -->|Admin Approved| G
+                    H -->|Admin Rejected| J[Task Cancelled]
+                    G -->|9. Audit Log & SLA| K[(SQLite Database)]
+                    G -->|10. Knowledge Update| L[(ChromaDB Learning)]
+                </div>
+            </div>
+
+            <h3>2.6 Quy trình xử lý và chuẩn bị dữ liệu</h3>
+            <p>Phân tích luồng dữ liệu khi Webhook được gửi từ Grafana: parse các trường thông tin quan trọng như
+                `title`, `status`, `labels`, `annotations`. Trình bày quy trình PowerShell ngầm quét log Windows Event
+                Logs trong 15 phút gần nhất, lọc bỏ các chuỗi thừa, giới hạn độ dài ký tự để tối ưu chi phí token.</p>
+
+            <div class="info-box image-tip">
+                <div class="info-box-title">📸 Hình vẽ cần chèn tại đây:</div>
+                <p>Chèn <strong>Hình 2.3: Sơ đồ luồng xử lý và làm sạch dữ liệu logs đầu vào</strong>. Minh họa quá
+                    trình từ raw logs -> PowerShell filter -> Regex cleaning -> Token truncation -> Input Context.</p>
+            </div>
+
+            <h3>2.7 Thiết kế Module xử lý lõi AI (LLM Prompt & RAG query strategy)</h3>
+            <p>Trình bày kiến trúc bộ lọc RAG. Khi nhận lỗi `alert_name`, hệ thống gọi hàm `query_rag_context` để tìm
+                các văn bản playbook tương tự. Cấu trúc Prompt Template ép LLM phải trả về định dạng JSON nghiêm ngặt để
+                backend dễ dàng bóc tách.</p>
+
+            <h3>2.8 Thiết kế cơ chế an toàn và Human-in-the-loop</h3>
+            <p>Phân tích luồng hoạt động phê duyệt: Sử dụng cơ chế khóa Task (Task locking) để ngăn việc admin bấm duyệt
+                2 lần gây xung đột. Chi tiết luồng phê duyệt được thể hiện trong sơ đồ tuần tự bên dưới:</p>
+
+            <div class="info-box image-tip">
+                <div class="info-box-title">📸 Hình vẽ cần chèn tại đây:</div>
+                <p>Chèn <strong>Hình 2.4: Sơ đồ tuần tự (Sequence Diagram) luồng phê duyệt lệnh mức độ MEDIUM</strong>.
+                    Thể hiện tương tác giữa Grafana -> FastAPI Backend -> Telegram Bot -> Admin -> Telegram API ->
+                    FastAPI Callback Handler -> Target Host PowerShell.</p>
+            </div>
+
+            <h3>2.9 Thiết kế cơ sở dữ liệu</h3>
+            <p>Đặc tả chi tiết thiết kế cơ sở dữ liệu SQLite/PostgreSQL cho hai bảng chính: `agent_tasks` (lưu trạng
+                thái task) và `audit_logs` (lưu vết xử lý chi tiết).</p>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 2.3: Cấu trúc bảng agent_tasks</strong>, <strong>Bảng 2.4: Cấu trúc bảng
+                        audit_logs</strong>. Mô tả chi tiết kiểu dữ liệu, khóa chính, khóa ngoại và tác dụng của từng
+                    trường.</p>
+            </div>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    erDiagram
+                    agent_tasks {
+                    string task_id PK
+                    string alert_title
+                    string labels_json
+                    string severity
+                    string proposed_action
+                    string status
+                    string created_at
+                    string updated_at
+                    }
+                    audit_logs {
+                    int log_id PK
+                    string task_id FK
+                    string rag_context_used
+                    string rag_context_refs
+                    string decision_reason
+                    string execution_result
+                    string execution_output
+                    int processing_time_ms
+                    int prompt_tokens
+                    int completion_tokens
+                    }
+                    agent_tasks ||--o{ audit_logs : "references"
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CH3 SECTION ================= -->
+        <section id="ch3" class="content-section">
+            <h2>Chương 3: Triển Khai và Xây Dựng Chi Tiết</h2>
+            <p><strong>Định biên trang:</strong> 15 - 20 trang. Tập trung vào trích dẫn code thông minh, giải thích
+                thuật toán và cấu hình thực tế.</p>
+
+            <h3>3.1 Cài đặt môi trường và cấu hình hệ thống</h3>
+            <p>Trình bày chi tiết cách cấu hình biến môi trường trong file cấu hình bảo mật `.env`. Giải thích tầm quan
+                trọng của việc không đẩy file này lên GitHub công khai.</p>
+
+            <div class="filename-tag">agent_api/.env</div>
+            <pre><code># Cấu hình Secret Key xác thực Webhook Grafana
+AGENT_API_KEY=default_secret_key
+# API Key của dịch vụ Google Gemini
+GOOGLE_API_KEY=AIzaSyA...
+# Token và Chat ID của Telegram Alert Bot
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF...
+TELEGRAM_CHAT_ID=-100123456789</code></pre>
+
+            <h3>3.2 Xây dựng Backend API FastAPI</h3>
+            <p>Trích dẫn và phân tích chi tiết hàm xử lý webhook chính trong file `main.py`. Giải thích cách sử dụng thư
+                viện `BackgroundTasks` để tránh timeout:</p>
+
+            <div class="filename-tag">agent_api/app/main.py</div>
+            <pre><code>@app.post("/api/v1/alerts/webhook")
+def ingest_grafana_webhook(
+    payload: GrafanaWebhookPayload,
+    background_tasks: BackgroundTasks,
+    _: None = Depends(verify_api_key),
+):
+    received_at = datetime.now(timezone.utc)
+    alert_id = f"ALT-{received_at.strftime('%Y%m%d')}-{uuid.uuid4().hex[:6]}"
+    
+    # Kích hoạt luồng phân loại và thực thi chạy ngầm
+    background_tasks.add_task(process_alert_workflow, alert_id, payload, received_at)
+    
+    return {
+        "received": True,
+        "alert_id": alert_id,
+        "title": payload.title,
+        "message": "Alert is being triaged by AI Agent in the background."
+    }</code></pre>
+
+            <div class="info-box academic">
+                <div class="info-box-title">✍️ Phân tích học thuật cho đoạn code trên:</div>
+                <p>FastAPI sử dụng mô hình lập trình bất đồng bộ (Asynchronous). Việc đưa hàm `process_alert_workflow`
+                    vào `background_tasks` giúp server phản hồi mã trạng thái HTTP 200 về cho Grafana gần như lập tức
+                    (&lt; 100ms). Điều này ngăn chặn việc Grafana đóng kết nối do quá hạn phản hồi (timeout), trong khi
+                    tác vụ gọi LLM và thực thi script có thể tốn từ 3-8 giây tùy thuộc vào độ trễ mạng.</p>
+            </div>
+
+            <h3>3.3 Tích hợp mô hình AI và cơ chế RAG</h3>
+            <p>Trình bày logic nạp dữ liệu vào ChromaDB. Khi khởi chạy hệ thống, file `database.py` hoặc `main.py` sẽ
+                khởi tạo cơ sở dữ liệu vector. Trích dẫn đoạn mã gọi `ChatGoogleGenerativeAI` với mô hình
+                `gemini-3.1-flash-lite` và thiết lập `temperature=0.2` để ngăn hiện tượng AI tự ý sáng tạo lệnh.</p>
+
+            <h3>3.4 Viết các script tự động khắc phục PowerShell</h3>
+            <p>Đặc tả chi tiết hoạt động của 2 script phục hồi an toàn nằm trong Whitelist:
+                <br>1. <span class="code-snippet">cleanup_temp_files.ps1</span>: Tự động dọn dẹp các tệp tin tạm thời
+                trong thư mục được cấu hình an toàn.
+                <br>2. <span class="code-snippet">restart_service.ps1</span>: Khởi động lại dịch vụ Windows bị lỗi thông
+                qua tên dịch vụ truyền vào dưới dạng tham số.
+            </p>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 3.1: Các tham số đầu vào của PowerShell Whitelist Scripts</strong>. Cột 1: Tên
+                    Script, Cột 2: Tham số, Cột 3: Kiểu dữ liệu, Cột 4: Giá trị mặc định, Cột 5: Tác vụ kiểm tra an
+                    toàn.</p>
+            </div>
+
+            <h3>3.5 Tích hợp Telegram Bot API và cơ chế Callback nhận phản hồi</h3>
+            <p>Trình bày hàm `telegram_webhook` tiếp nhận sự kiện POST từ Telegram Webhook khi người dùng tương tác với
+                Inline Keyboard. Giải thích cách bóc tách chuỗi `callback_data` (ví dụ: `approve_ALT-20260527-abc123`
+                hoặc `reject_ALT-20260527-abc123`), truy xuất database kiểm tra trạng thái và cập nhật tin nhắn để ẩn
+                nút bấm sau khi phê duyệt xong.</p>
+        </section>
+
+        <!-- ================= CH4 SECTION ================= -->
+        <section id="ch4" class="content-section">
+            <h2>Chương 4: Thực Nghiệm và Kiểm Thử Hệ Thống</h2>
+            <p><strong>Định biên trang:</strong> 10 - 15 trang. Trọng tâm của chương này là số liệu thực tế, ảnh chụp
+                màn hình kiểm thử và đánh giá SLA.</p>
+
+            <h3>4.1 Kịch bản kiểm thử chức năng hệ thống</h3>
+            <p>Trình bày chi tiết 4 kịch bản kiểm thử tương ứng với các file chạy demo trong thư mục `demo_scripts`:</p>
+            <ul>
+                <li><strong>Kịch bản 4.1.1: Giả lập lỗi dung lượng ổ đĩa (Mức SMALL):</strong> Kích hoạt
+                    `demo_small_error.ps1` -> Kiểm tra log backend xem có gọi `cleanup_temp_files.ps1` tự động hay
+                    không.</li>
+                <li><strong>Kịch bản 4.1.2: Giả lập CPU quá tải (Mức MEDIUM):</strong> Kích hoạt `demo_medium_error.ps1`
+                    -> Check tin nhắn Telegram có hiển thị 2 nút Approve/Reject -> Bấm Approve -> Xác nhận service được
+                    khởi chạy lại thành công.</li>
+                <li><strong>Kịch bản 4.1.3: Giả lập sập Core Service (Mức CRITICAL):</strong> Kích hoạt
+                    `demo_critical_error.ps1` -> Check log xem có cào Windows Event Log 15 phút gần nhất -> Gửi báo động
+                    đỏ kèm Root Cause Analysis về Telegram.</li>
+                <li><strong>Kịch bản 4.1.4: Tấn công chèn mã độc (SECURITY check):</strong> Kích hoạt
+                    `demo_hacker_injection.ps1` với payload chứa lệnh shell độc hại -> Chứng minh AI từ chối phân loại
+                    SMALL/MEDIUM và Backend Circuit Breaker chặn đứng không chạy lệnh ngoài whitelist.</li>
+            </ul>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng cần chèn tại đây:</div>
+                <p>Chèn các bảng kết quả kiểm thử chức năng từ <strong>Bảng 4.1 đến Bảng 4.4</strong> tương ứng với 4
+                    kịch bản trên. Mỗi bảng gồm các cột: Bước kiểm thử, Dữ liệu đầu vào, Kết quả kỳ vọng, Kết quả thực
+                    tế, Trạng thái (Đạt/Không đạt).</p>
+            </div>
+
+            <div class="info-box image-tip">
+                <div class="info-box-title">📸 Hình vẽ cần chèn tại đây:</div>
+                <p>Chèn <strong>Hình 4.1: Ảnh chụp màn hình tin nhắn Telegram Bot mức MEDIUM có nút bấm</strong> và
+                    <strong>Hình 4.2: Ảnh chụp màn hình tin nhắn Telegram Bot mức CRITICAL kèm Event Logs</strong>. Đây
+                    là những bằng chứng thực nghiệm bắt buộc phải có trong báo cáo tốt nghiệp.</p>
+            </div>
+
+            <h3>4.2 Thực nghiệm so sánh hiệu năng và thời gian xử lý (MTTR / SLA)</h3>
+            <p>Trình bày kết quả đo lường thời gian xử lý sự cố. Phân tích sự giảm thiểu vượt bậc của MTTR từ hàng chục
+                phút xuống dưới 10 giây nhờ tự động hóa khép kín.</p>
+
+            <div class="info-box table-tip">
+                <div class="info-box-title">📊 Bảng số liệu cần chèn tại đây:</div>
+                <p>Chèn <strong>Bảng 4.5: Thống kê thời gian xử lý sự cố qua 10 lần thử nghiệm</strong>. Cột 1: Mã sự
+                    cố, Cột 2: Thời gian gọi RAG & LLM (ms), Cột 3: Thời gian chạy script PowerShell (ms), Cột 4: Tổng
+                    thời gian phản hồi hệ thống (ms), Cột 5: Trạng thái SLA (&lt; 30s).</p>
+            </div>
+
+            <h3>4.3 Thực nghiệm thống kê token tiêu thụ và chi phí vận hành API</h3>
+            <p>Trình bày dữ liệu bóc tách từ bảng `audit_logs` về lượng Prompt Tokens và Completion Tokens tiêu thụ cho
+                mỗi cuộc gọi AI. Tính toán chi phí thực tế dựa trên bảng giá API của Google Gemini 3.1 Flash Lite.</p>
+        </section>
+
+        <!-- ================= CH5 SECTION ================= -->
+        <section id="ch5" class="content-section">
+            <h2>Chương 5: Kết Luận và Hướng Phát Triển</h2>
+            <p><strong>Định biên trang:</strong> 3 - 5 trang. Tổng kết lại toàn bộ đóng góp và hạn chế của đề tài.</p>
+
+            <h3>5.1 Các kết quả nghiên cứu và thực nghiệm đạt được</h3>
+            <p>Tóm tắt các đóng góp lớn của dự án: Xây dựng thành công hệ thống giám sát tự phục hồi khép kín
+                (Closed-loop AIOps); Tích hợp RAG để giảm thiểu ảo giác của AI; Đảm bảo an toàn tuyệt đối nhờ cơ chế
+                kiểm tra whitelist cứng tại backend và phê duyệt qua Telegram.</p>
+
+            <h3>5.2 Những hạn chế kỹ thuật hiện tại</h3>
+            <p>Thừa nhận trung thực các điểm yếu của phiên bản MVP hiện tại:
+                <br>1. Hệ thống chạy script PowerShell cục bộ nên mới chỉ áp dụng được trên một server đơn lẻ, chưa hỗ
+                trợ hạ tầng phân tán.
+                <br>2. Chưa tích hợp hệ thống gom log tập trung nên việc đọc Event Log còn thủ công qua PowerShell
+                command cục bộ.
+            </p>
+
+            <h3>5.3 Hướng mở rộng và phát triển tương lai</h3>
+            <p>Đề xuất giải pháp nâng cấp hệ thống:
+                <br>1. Tích hợp giải pháp gom log tập trung như <strong>Grafana Loki</strong> kết hợp Promtail để AI
+                Agent có thể truy vấn log của bất kỳ node nào trong hệ thống thông qua API tập trung.
+                <br>2. Nâng cấp bộ máy thực thi script từ PowerShell cục bộ sang các công cụ quản lý cấu hình tập trung
+                như <strong>Ansible / Kubernetes API</strong> để điều khiển hạ tầng quy mô lớn.
+                <br>3. Sử dụng lịch sử audit logs tốt nhất để xây dựng bộ dữ liệu Few-shot Prompting chất lượng cao giúp
+                AI ngày càng thông minh.
+            </p>
+        </section>
+
+        <!-- ================= FIGURES MAP ================= -->
+        <section id="figmap" class="content-section">
+            <h2>📸 Danh Mục 13 Hình Vẽ Cho Luận Văn</h2>
+            <p>Dưới đây là sơ đồ bố trí chi tiết 13 hình vẽ bắt buộc cần đưa vào luận văn của bạn để đạt yêu cầu về minh
+                họa trực quan khoa học:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Số hiệu hình</th>
+                        <th>Tiêu đề hình vẽ</th>
+                        <th>Chương</th>
+                        <th>Mô tả chi tiết nội dung cần vẽ/chụp</th>
+                        <th>Công cụ đề xuất</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hình 1.1</td>
+                        <td>Sơ đồ so sánh quy trình DevOps truyền thống và quy trình tự động AutoOps</td>
+                        <td>Chương 1</td>
+                        <td>So sánh trực quan dòng thời gian trễ giữa con người và AI Agent.</td>
+                        <td>Draw.io / Figma</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 1.2</td>
+                        <td>Kiến trúc tổng quan của hệ thống RAG (Retrieval-Augmented Generation)</td>
+                        <td>Chương 1</td>
+                        <td>Sơ đồ luồng: Nạp tài liệu -> Chunking -> Vector DB -> Query -> LLM -> Output.</td>
+                        <td>Canva / Draw.io</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 1.3</td>
+                        <td>Kiến trúc thu thập Metrics và Alerting của Prometheus</td>
+                        <td>Chương 1</td>
+                        <td>Sơ đồ Node Exporter -> Prometheus Pull -> Alertmanager -> Webhook.</td>
+                        <td>Draw.io</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 2.1</td>
+                        <td>Sơ đồ luồng thời gian trễ của quy trình DevOps thủ công</td>
+                        <td>Chương 2</td>
+                        <td>Phân rã chi tiết thời gian phản hồi từng bước xử lý lỗi của kỹ sư.</td>
+                        <td>Figma / Excel</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 2.2</td>
+                        <td>Sơ đồ kiến trúc tổng quan hệ thống AutoOps Agent (Closed-loop)</td>
+                        <td>Chương 2</td>
+                        <td>Kiến trúc kết nối Webhook -> FastAPI -> ChromaDB -> LLM -> Telegram/PowerShell.</td>
+                        <td>Mermaid.js / Figma</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 2.3</td>
+                        <td>Sơ đồ luồng xử lý và làm sạch Event Logs hệ thống</td>
+                        <td>Chương 2</td>
+                        <td>Minh họa các bước lọc log bằng PowerShell, làm sạch ký tự và cắt chuỗi.</td>
+                        <td>Lucidchart</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 2.4</td>
+                        <td>Sơ đồ tuần tự (Sequence Diagram) luồng phê duyệt sự cố MEDIUM</td>
+                        <td>Chương 2</td>
+                        <td>Thể hiện tương tác tuần tự giữa Grafana, FastAPI Backend, Telegram và Target Server.</td>
+                        <td>PlantUML / Mermaid</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 2.5</td>
+                        <td>Sơ đồ quan hệ thực thể database (ERD)</td>
+                        <td>Chương 2</td>
+                        <td>Sơ đồ các bảng agent_tasks, audit_logs và mối liên kết khóa ngoại.</td>
+                        <td>dbdiagram.io</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 4.1</td>
+                        <td>Cấu trúc thư mục mã nguồn Backend và Observability</td>
+                        <td>Chương 3</td>
+                        <td>Ảnh chụp màn hình cấu trúc thư mục của dự án trong VS Code.</td>
+                        <td>VS Code Screenshot</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 5.1</td>
+                        <td>Giao diện Dashboard giám sát tài nguyên máy chủ trên Grafana</td>
+                        <td>Chương 4</td>
+                        <td>Ảnh chụp đồ thị CPU/RAM quá tải và thời điểm được khôi phục thành công.</td>
+                        <td>Grafana Screenshot</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 5.2</td>
+                        <td>Cảnh báo MEDIUM và các nút bấm phê duyệt trên Telegram</td>
+                        <td>Chương 4</td>
+                        <td>Ảnh chụp màn hình tin nhắn Telegram Bot hiển thị nút bấm Approve/Reject.</td>
+                        <td>Telegram Mobile Cap</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 5.3</td>
+                        <td>Báo động đỏ mức CRITICAL và phân tích nguyên nhân từ Event Logs</td>
+                        <td>Chương 4</td>
+                        <td>Ảnh chụp màn hình tin nhắn bot gửi log lỗi Windows kèm Root Cause Analysis.</td>
+                        <td>Telegram Desktop Cap</td>
+                    </tr>
+                    <tr>
+                        <td>Hình 5.4</td>
+                        <td>Biểu đồ so sánh chỉ số MTTR giữa xử lý thủ công và AutoOps</td>
+                        <td>Chương 4</td>
+                        <td>Biểu đồ cột so sánh thời gian khôi phục lỗi (Giây vs Phút).</td>
+                        <td>Python Matplotlib</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ================= TABLES MAP ================= -->
+        <section id="tblmap" class="content-section">
+            <h2>📊 Danh Mục 18 Bảng Biểu Cho Luận Văn</h2>
+            <p>Dưới đây là danh sách và vị trí chi tiết của 18 bảng số liệu học thuật cần chèn vào luận văn của bạn:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Số hiệu bảng</th>
+                        <th>Tiêu đề bảng biểu</th>
+                        <th>Chương</th>
+                        <th>Mục đích và các cột dữ liệu cần hiển thị</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bảng 1.1</td>
+                        <td>So sánh đặc tính các mô hình LLM dưới vai trò SRE Agent</td>
+                        <td>Chương 1</td>
+                        <td>So sánh GPT-4o, Gemini, Llama, Mistral (Cột: Chi phí, Latency, Bảo mật).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 1.2</td>
+                        <td>Các công nghệ sử dụng trong hệ thống AutoOps Agent</td>
+                        <td>Chương 1</td>
+                        <td>Liệt kê FastAPI, Prometheus, Grafana, ChromaDB, SQLite (Cột: Công nghệ, Vai trò).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 2.1</td>
+                        <td>Ma trận phân loại sự cố hệ thống (Triage Matrix)</td>
+                        <td>Chương 2</td>
+                        <td>Ma trận 3 mức SMALL, MEDIUM, CRITICAL (Cột: Mức độ, Kích hoạt, Hành động, Rủi ro).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 2.2</td>
+                        <td>Đặc tả các ca sử dụng (Use Case Specs) của hệ thống</td>
+                        <td>Chương 2</td>
+                        <td>Đặc tả tác nhân và kịch bản sử dụng (Cột: UC ID, Tên UC, Tác nhân, Mô tả ngắn).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 2.3</td>
+                        <td>Cấu trúc chi tiết của bảng agent_tasks trong database</td>
+                        <td>Chương 2</td>
+                        <td>Đặc tả schema database (Cột: Tên trường, Kiểu dữ liệu, Khóa, Tác dụng).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 2.4</td>
+                        <td>Cấu trúc chi tiết của bảng audit_logs trong database</td>
+                        <td>Chương 2</td>
+                        <td>Đặc tả schema lưu vết audit (Cột: Tên trường, Kiểu dữ liệu, Khóa, Mô tả).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 2.5</td>
+                        <td>Danh sách các lệnh Whitelist được phép thực thi (Allowed Tools)</td>
+                        <td>Chương 2</td>
+                        <td>Khai báo whitelisted scripts (Cột: Tool Name, Script Path, Tác dụng, Mức độ rủi ro).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 3.1</td>
+                        <td>Các tham số đầu vào của PowerShell Whitelist Scripts</td>
+                        <td>Chương 3</td>
+                        <td>Đặc tả API tham số (Cột: Tên script, Tên tham số, Kiểu dữ liệu, Ràng buộc kiểm tra).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 3.2</td>
+                        <td>Cấu hình Alert Rules trên Prometheus cho hạ tầng máy chủ</td>
+                        <td>Chương 3</td>
+                        <td>Đặc tả các file cấu hình YAML alert (Cột: Tên Alert, Biểu thức PromQL, Duration, Severity).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 3.3</td>
+                        <td>Cấu trúc Payload Webhook chuẩn được phát đi từ Grafana</td>
+                        <td>Chương 3</td>
+                        <td>Đặc tả JSON schema của Grafana (Cột: Trường JSON, Kiểu dữ liệu, Tác dụng, Ví dụ dữ liệu).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.1</td>
+                        <td>Kiểm thử kịch bản tự động dọn rác ổ đĩa (SMALL Alert)</td>
+                        <td>Chương 4</td>
+                        <td>Bảng ghi nhận kết quả test SMALL (Cột: Bước, Dữ liệu đầu vào, Kết quả kỳ vọng, Thực tế,
+                            Trạng thái).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.2</td>
+                        <td>Kiểm thử kịch bản phê duyệt dịch vụ quá tải qua Telegram (MEDIUM Alert)</td>
+                        <td>Chương 4</td>
+                        <td>Bảng ghi nhận kết quả test MEDIUM (Cột: Bước, Dữ liệu đầu vào, Kết quả kỳ vọng, Thực tế,
+                            Trạng thái).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.3</td>
+                        <td>Kiểm thử kịch bản quét Event Log và cảnh báo Root Cause (CRITICAL Alert)</td>
+                        <td>Chương 4</td>
+                        <td>Bảng ghi nhận kết quả test CRITICAL (Cột: Bước, Dữ liệu đầu vào, Kết quả kỳ vọng, Thực tế,
+                            Trạng thái).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.4</td>
+                        <td>Kiểm thử kịch bản chặn đứng Prompt Injection chèn mã độc (SECURITY Check)</td>
+                        <td>Chương 4</td>
+                        <td>Bảng ghi nhận kết quả test Prompt Injection (Cột: Bước, Input độc hại, Kỳ vọng chặn, Thực
+                            tế, Trạng thái).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.5</td>
+                        <td>Thống kê thời gian xử lý sự cố qua 10 lần chạy thử nghiệm</td>
+                        <td>Chương 4</td>
+                        <td>Đo lường thời gian chạy các phân hệ (Cột: Lần chạy, Thời gian LLM, Thời gian Script, Tổng
+                            thời gian).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.6</td>
+                        <td>Đo lường lượng Token tiêu thụ và chi phí vận hành API Gemini</td>
+                        <td>Chương 4</td>
+                        <td>Thống kê token tiêu thụ (Cột: Sự cố, Input Tokens, Output Tokens, Tổng Tokens, Chi phí USD).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.7</td>
+                        <td>Kiểm thử hiệu năng chịu tải của API Webhook Backend</td>
+                        <td>Chương 4</td>
+                        <td>Đo lường khả năng xử lý đồng thời (Cột: Số requests/s, Tỉ lệ thành công %, Latency trung
+                            bình).</td>
+                    </tr>
+                    <tr>
+                        <td>Bảng 4.8</td>
+                        <td>Kiểm thử khả năng chịu lỗi (Fallback Policy) khi API LLM gặp sự cố</td>
+                        <td>Chương 4</td>
+                        <td>Test tắt mạng / đổi API Key sai (Cột: Tình huống lỗi, Phản ứng hệ thống, Trạng thái
+                            fallback).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <p>AutoOps Agent Dissertation Blueprint © 2026 - Bản đề cương chi tiết học thuật cho Luận văn tốt nghiệp 60
+                - 85 trang.</p>
+        </footer>
+
+    </main>
+
+    <!-- PLANNER INTERACTION SCRIPT -->
+    <script>
+        // Chapter budget allocation percentages (Times New Roman layout proportions)
+        const budgetProportions = {
+            ch0: 0.07, // 7% for Lời cảm ơn, Mục lục, Danh mục từ viết tắt, phụ lục
+            ch1: 0.23, // 23% for Chương 1: Cơ sở lý thuyết
+            ch2: 0.30, // 30% for Chương 2: Phân tích & Thiết kế
+            ch3: 0.23, // 23% for Chương 3: Triển khai chi tiết
+            ch4: 0.13, // 13% for Chương 4: Thực nghiệm & Kiểm thử
+            ch5: 0.04  // 4% for Chương 5: Kết luận & Hướng phát triển
+        };
+
+        function calculatePages(totalPageCount) {
+            document.getElementById('page-count-val').innerText = `${totalPageCount} trang`;
+
+            let sum = 0;
+            const chapters = ['ch0', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
+
+            chapters.forEach((ch, idx) => {
+                let pages = Math.round(totalPageCount * budgetProportions[ch]);
+
+                // Adjust last chapter calculation to avoid rounding gaps
+                if (idx === chapters.length - 1) {
+                    pages = totalPageCount - sum;
+                }
+                sum += pages;
+
+                // Update label
+                document.getElementById(`${ch}-budget`).innerText = `${pages} trang`;
+
+                // Update visual bar
+                const percent = (pages / totalPageCount) * 100;
+                document.getElementById(`${ch}-bar`).style.width = `${percent}%`;
+            });
+        }
+
+        // Switch sidebar tabs
+        function switchSection(event, sectionId) {
+            event.preventDefault();
+
+            // Remove active classes
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Add active classes to current tab and section
+            event.currentTarget.classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+
+            // Smooth scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize with default 75 pages target
+        calculatePages(75);
+    </script>
+</body>
+
+</html>

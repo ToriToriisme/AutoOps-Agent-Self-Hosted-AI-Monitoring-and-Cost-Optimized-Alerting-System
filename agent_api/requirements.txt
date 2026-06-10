@@ -6,4 +6,6 @@ chromadb
 langchain-google-genai
 langchain-core
 requests
+psycopg2-binary
+
 

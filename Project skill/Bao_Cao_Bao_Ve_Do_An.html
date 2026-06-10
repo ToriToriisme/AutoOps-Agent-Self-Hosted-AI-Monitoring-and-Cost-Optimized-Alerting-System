@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoOps Agent - Kịch Bản Demo & Q&A</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #ca8a04;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: #1e293b;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h2 {
+            color: var(--secondary);
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        .section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .step {
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+            margin-bottom: 25px;
+            background: #f1f5f9;
+            padding: 15px 15px 15px 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .qa-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+        }
+        .qa-q {
+            background: #1e293b;
+            padding: 15px 20px;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+        .qa-a {
+            padding: 20px;
+            background: white;
+            font-size: 1.05em;
+        }
+        .highlight {
+            font-weight: bold;
+            color: var(--danger);
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-right: 10px;
+        }
+        .badge-critical { background: var(--danger); }
+        .badge-medium { background: var(--warning); }
+        .badge-security { background: #9333ea; }
+        code {
+            background: #e2e8f0;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #b91c1c;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+        }
+        .icon { font-size: 1.2em; margin-right: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Kịch Bản Demo & Cẩm Nang Phản Biện (AutoOps Agent)</h1>
+
+        <!-- KỊCH BẢN DEMO -->
+        <div class="section">
+            <h2><span class="icon">🎬</span>Kịch Bản Thực Hiện Demo Chấm Điểm</h2>
+            <p><i>Hướng dẫn: Mở sẵn 2 cửa sổ cạnh nhau. Một bên là Terminal chạy Uvicorn, một bên là PowerShell để chạy Script. Chuẩn bị sẵn điện thoại mở Telegram để show cho giám khảo.</i></p>
+            
+            <div class="step">
+                <h3>Bước 1: Khởi động hệ thống (Show hàng kiến trúc)</h3>
+                <p>Khởi động server bằng lệnh <code>.\.venv\Scripts\uvicorn app.main:app --port 8000</code>. Giới thiệu sơ qua: <i>"Hệ thống của em đang lắng nghe Webhook từ Grafana, có xác thực X-API-Key để chống người lạ truy cập."</i></p>
+            </div>
+
+            <div class="step">
+                <h3>Bước 2: Demo Luồng MEDIUM <span class="badge badge-medium">MEDIUM</span> (Chờ phê duyệt)</h3>
+                <p>Chạy lệnh: <code>.\demo_scripts\demo_medium_error.ps1</code></p>
+                <p><b>Giải thích:</b> <i>"Đây là luồng Human-in-the-loop. Khi Server báo CPU High, thay vì tự động chạy lệnh can thiệp rủi ro, AI sẽ phân tích và lưu Task vào Database ở trạng thái Pending để Admin duyệt. Điều này đảm bảo an toàn tuyệt đối cho Production."</i></p>
+            </div>
+
+            <div class="step">
+                <h3>Bước 3: Demo Luồng CRITICAL <span class="badge badge-critical">CRITICAL</span> (Báo động khẩn & Đọc Event Log)</h3>
+                <p>Chạy lệnh: <code>.\demo_scripts\demo_critical_error.ps1</code></p>
+                <p><b>Giải thích:</b> <i>"Khi Server bị sập, hệ thống sẽ tự động quét Windows Event Log 15 phút gần nhất, nhúng vào Context cho LLM. Ngay lập tức, điện thoại của em (Show Telegram) nhận được cảnh báo. Các thầy cô có thể thấy AI phân tích trúng phóc nguyên nhân từ Event Log thay vì đoán mò."</i></p>
+            </div>
+
+            <div class="step">
+                <h3>Bước 4: Demo Luồng BẢO MẬT <span class="badge badge-security">SECURITY</span> (Đóng giả Hacker)</h3>
+                <p>Chạy lệnh: <code>.\demo_scripts\demo_hacker_injection.ps1</code></p>
+                <p><b>Giải thích:</b> <i>"Điểm ăn tiền nhất của đồ án: Bảo mật Prompt Injection. Khi Hacker chèn lệnh yêu cầu xóa hệ thống 'rm -rf /', AI Agent đã nhận diện đây là tấn công, từ chối thực thi, nâng mức cảnh báo lên CRITICAL và báo cáo thẳng về Telegram. Đồng thời em có cơ chế Whitelist Circuit Breaker chốt chặn cuối cùng."</i></p>
+            </div>
+        </div>
+
+        <!-- Q&A SECTION -->
+        <div class="section">
+            <h2><span class="icon">💡</span>10 Câu Hỏi Phản Biện Từ Giám Khảo & Trả Lời</h2>
+
+            <div class="qa-card">
+                <div class="qa-q">Q1: Tại sao em lại chọn AI (LLM) để làm DevOps thay vì dùng các quy tắc (Rule-based/Regex) truyền thống?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Các hệ thống Rule-based rất cứng nhắc, đòi hỏi kỹ sư phải viết hàng ngàn quy tắc Regex để bắt lỗi log. LLM (Gemini) có khả năng <b>tổng hợp ngữ cảnh</b>, "đọc hiểu" các Event Log lộn xộn của Windows và suy luận ra nguyên nhân cốt lõi (Root Cause) nhanh chóng. Tuy nhiên, em không bỏ Rule-based mà dùng nó làm lớp <b>Fallback</b> an toàn.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q2: Lỡ API của Google bị sập mạng hoặc đổi Key sai thì hệ thống giám sát của em "chết" luôn à?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Dạ không ạ. Em thiết kế hệ thống theo chuẩn Fault-Tolerant (Chịu lỗi). Em bọc API call bằng khối <code>try-except</code>. Nếu API sập, hệ thống tự động kích hoạt <b>Robust Fallback Policy</b> (Bảng quy tắc dự phòng O(1)), chuyển sang dùng các keyword tĩnh để phân loại cảnh báo mà không làm gián đoạn hệ thống.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q3: Nếu ai đó lợi dụng Grafana đẩy log giả mạo xúi AI gõ lệnh "xóa toàn bộ server" (Prompt Injection) thì sao?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Hệ thống của em có <b>2 lớp bảo vệ (Zero Trust)</b>:
+                    <br>1. <b>AI Guardrails:</b> Gemini đủ thông minh để nhận ra các lệnh độc hại và từ chối.
+                    <br>2. <b>Whitelist Circuit Breaker:</b> Bất kể AI đề xuất gì, code Backend sẽ kiểm tra chéo với danh sách <code>ALLOWED_TOOLS</code>. Nếu lệnh (như 'rm -rf /') không nằm trong Whitelist, hệ thống lập tức ném lỗi và từ chối thực thi.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q4: Cơ chế RAG (Retrieval-Augmented Generation) được áp dụng trong đồ án của em để làm gì?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> LLM thường có kiến thức chung chung. Em dùng RAG (với ChromaDB) để nạp các <b>SOP / Playbook nội bộ</b> của công ty vào AI. Khi có cảnh báo, hệ thống truy vấn Playbook liên quan nhất và ép AI phải chẩn đoán, xử lý tuân thủ nghiêm ngặt theo quy trình nội bộ đó thay vì sáng tạo tự do.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q5: Làm sao em chắc chắn AI chẩn đoán đúng bệnh thay vì "ảo giác" (Hallucination) bịa ra nguyên nhân?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Em hạn chế ảo giác bằng 3 cách: Set <code>temperature = 0.2</code> để câu trả lời có tính xác định cao; Cung cấp ngữ cảnh thực tế cực mạnh bằng cách fetch trực tiếp <b>Windows Event Logs</b> 15 phút gần nhất; Yêu cầu output đầu ra bắt buộc phải theo format <b>JSON</b> nghiêm ngặt.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q6: FastAPI BackgroundTasks đóng vai trò gì? Sao không gọi trực tiếp AI rồi trả kết quả cho Grafana?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Việc gọi LLM API và gửi Telegram tốn khoảng 3-8 giây. Nếu bắt Grafana Webhook chờ, nó sẽ bị <b>Timeout</b> và báo lỗi. <code>BackgroundTasks</code> giúp API của em trả về <code>200 OK</code> ngay lập tức (trong 0.1s) để Grafana yên tâm, sau đó quá trình Triage AI sẽ âm thầm chạy ngầm phía sau mà không gây nghẽn mạng.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q7: Tại sao luồng MEDIUM lại cần lưu vào Database ở trạng thái 'pending' thay vì chạy tự động luôn?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Đó là cơ chế <b>Human-in-the-loop</b>. Việc tự động hóa 100% trong Production là rất rủi ro. Những lỗi nhỏ (dọn rác) có thể tự làm, nhưng lỗi MEDIUM (cần restart service, tốn tài nguyên) phải được AI chuẩn bị sẵn phương án, đưa vào hàng chờ để Admin phê duyệt bằng tay (Approve) mới được chạy, nhằm đảm bảo an toàn tuyệt đối.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q8: Kiến trúc này nếu muốn scale lên 50-100 máy chủ thì em cần thay đổi gì?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Với phiên bản MVP, em dùng <code>subprocess</code> để lấy log cục bộ. Nếu scale lên 100 máy, em sẽ triển khai kiến trúc Log Aggregation (như Promtail + Loki) trên các node. Lúc đó, AI Agent Backend sẽ gọi API vào Loki để truy vấn log tập trung của bất kỳ node nào bị lỗi, thay vì chạy PowerShell cục bộ.
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q9: File .env có tác dụng gì và tại sao em không đẩy nó lên GitHub?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> <code>.env</code> chứa các Secret Key tử huyệt (Google API Key, Telegram Token). Đẩy lên GitHub công khai sẽ bị Hacker quét và dùng trộm tài nguyên API. Em đã thiết lập <code>.gitignore</code> để chặn file này, tuân thủ nguyên tắc quản lý Secret (Zero Trust).
+                </div>
+            </div>
+
+            <div class="qa-card">
+                <div class="qa-q">Q10: Nếu muốn AI "thông minh lên" theo thời gian (Học từ các sự cố trong quá khứ) thì em sẽ làm thế nào?</div>
+                <div class="qa-a">
+                    <b>Trả lời:</b> Bảng <code>audit_logs</code> (SQLite) của em hiện đang lưu toàn bộ quyết định của AI. Trong tương lai, em có thể trích xuất các bản ghi xử lý thành công, biến nó thành bộ dữ liệu <b>Few-Shot Prompting</b> (Ví dụ mẫu) nạp ngược lại vào Vector Database. AI sẽ dựa vào cách xử lý đúng của các lần trước để ngày càng hoàn thiện hơn.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

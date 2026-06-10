@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoOps Agent - Kịch Bản Bảo Vệ Đồ Án 10 Phút</title>
+    <style>
+        :root {
+            --primary: #60a5fa;
+            --success: #4ade80;
+            --danger: #f87171;
+            --warning: #facc15;
+            --accent: #22d3ee;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --card-alt: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #475569;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #cbd5e1;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 5px;
+            margin-top: 35px;
+        }
+
+        .section {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgb(0 0 0 / 0.35);
+            border: 1px solid var(--border);
+        }
+
+        .phase {
+            border-left: 4px solid var(--primary);
+            padding: 12px 15px 12px 18px;
+            margin-bottom: 18px;
+            background: var(--card-alt);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .phase h3 {
+            margin: 0 0 8px 0;
+            color: var(--primary);
+        }
+
+        .phase .say {
+            background: rgba(96, 165, 250, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-style: italic;
+            color: #93c5fd;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .b-slide {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        .b-demo {
+            background: var(--success);
+            color: #0f172a;
+        }
+
+        .b-code {
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        .b-time {
+            background: var(--border);
+        }
+
+        code {
+            background: rgba(34, 211, 238, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #22d3ee;
+            font-family: Consolas, monospace;
+            font-size: 0.88em;
+        }
+
+        .file-ref {
+            background: rgba(250, 204, 21, 0.08);
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin: 6px 0;
+        }
+
+        .file-ref b {
+            color: var(--warning);
+        }
+
+        .file-ref ul {
+            margin: 6px 0;
+            padding-left: 20px;
+        }
+
+        .file-ref li {
+            margin-bottom: 4px;
+        }
+
+        .qa-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .qa-q {
+            background: #0f172a;
+            padding: 12px 18px;
+            font-weight: bold;
+            color: var(--warning);
+            font-size: 1.05em;
+        }
+
+        .qa-a {
+            padding: 15px 18px;
+            background: var(--card-alt);
+            color: var(--text);
+        }
+
+        .timer {
+            display: inline-block;
+            background: var(--danger);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        th {
+            background: #0f172a;
+            color: var(--primary);
+            padding: 8px;
+            text-align: left;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        tr:hover {
+            background: rgba(96, 165, 250, 0.08);
+        }
+
+        a { color: var(--primary); }
+
+        b, strong {
+            color: #f1f5f9;
+        }
+
+        .phase b, .phase strong {
+            color: var(--warning);
+        }
+        .sidebar{position:fixed;top:20px;left:16px;width:220px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 12px;box-shadow:0 8px 20px rgb(0 0 0/.4);z-index:100;max-height:calc(100vh - 40px);overflow-y:auto}
+        .sidebar h4{margin:0 0 10px;color:var(--accent);font-size:.85em;text-transform:uppercase;letter-spacing:1px}
+        .sidebar a{display:block;padding:6px 10px;margin-bottom:4px;border-radius:6px;color:var(--text-muted);text-decoration:none;font-size:.82em;transition:all .2s}
+        .sidebar a:hover{background:var(--card-alt);color:#fff}
+        .sidebar .sep{border-top:1px solid var(--border);margin:8px 0}
+        @media(max-width:1100px){.sidebar{display:none}.container{max-width:1050px!important;margin-left:auto!important;margin-right:auto!important}}
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <h4>📌 MỤC LỤC</h4>
+        <a href="#phan1">📊 Slide trình bày</a>
+        <a href="#phan2">📂 Giới thiệu dự án</a>
+        <a href="#phan3">🎬 Live Demo</a>
+        <div class="sep"></div>
+        <h4>💡 CÂU HỎI</h4>
+        <a href="#qa-baocao">📝 Nội dung báo cáo</a>
+        <a href="#qa-mainpy">🐍 Source: main.py</a>
+        <a href="#qa-dbpy">🗄️ Source: database.py</a>
+        <a href="#qa-tools">🔧 Công nghệ &amp; Thiết bị</a>
+        <a href="#qa-optimize">⚡ Tối ưu &amp; Mở rộng</a>
+    </nav>
+    <div class="container" style="max-width:850px;margin-left:260px;">
+        <h1>🚀 KỊCH BẢN BẢO VỆ ĐỒ ÁN - 10 PHÚT</h1>
+        <p style="text-align:center;color:#64748b;">AutoOps Agent — Self-Hosted AI Monitoring & Cost-Optimized Alerting
+            System</p>
+
+        <!-- ============ PHẦN 1: SLIDE 2 PHÚT ============ -->
+        <div class="section" id="phan1">
+            <h2>📊 PHẦN 1: TRÌNH BÀY SLIDE <span class="timer">~2 phút</span></h2>
+
+            <div class="phase">
+                <h3><span class="badge b-slide">Slide 1</span> Mục tiêu & Chức năng (20s)</h3>
+                <div class="say">"Đề tài giải quyết bài toán vận hành IT truyền thống tốn thời gian và nhân lực. Em xây
+                    dựng AutoOps Agent – hệ thống tự giám sát, tự phân tích lỗi bằng AI và tự sửa lỗi khép kín."</div>
+            </div>
+
+            <div class="phase">
+                <h3><span class="badge b-slide">Slide 2</span> Kiến trúc hệ thống (25s)</h3>
+                <div class="say">"Prometheus thu thập metrics → Grafana phát hiện lỗi → Webhook bắn về FastAPI → FastAPI
+                    phản hồi 200 OK ngay lập tức rồi đẩy tác vụ AI xuống BackgroundTasks xử lý ngầm."</div>
+            </div>
+
+            <div class="phase">
+                <h3><span class="badge b-slide">Slide 3</span> AI RAG & An toàn (30s)</h3>
+                <div class="say">"AI tra cứu Playbook từ ChromaDB (RAG) để giảm ảo giác. Bảo mật 2 lớp:
+                    Human-in-the-loop qua Telegram cho lỗi MEDIUM, và Whitelist Circuit Breaker chặn mọi lệnh ngoài danh
+                    sách trắng."</div>
+            </div>
+
+            <div class="phase">
+                <h3><span class="badge b-slide">Slide 4</span> Kết quả (25s)</h3>
+                <div class="say">"Thời gian xử lý trung bình 4-5 giây, nhanh hơn 200 lần so với thủ công. Chi phí API
+                    chỉ ~1.5 USD/tháng nhờ dùng Gemini Flash Lite."</div>
+            </div>
+
+            <div class="phase">
+                <h3><span class="badge b-slide">Slide 5</span> Kết luận & Slogan (20s)</h3>
+                <div class="say">"Automate the predictable, solve the exceptional. Sau đây em xin trình bày phần Demo
+                    thực tế ạ."</div>
+            </div>
+        </div>
+
+        <!-- ============ PHẦN 2: GIỚI THIỆU PROJECT ============ -->
+        <div class="section" id="phan2">
+            <h2>📂 PHẦN 2: GIỚI THIỆU DỰ ÁN & CÔNG NGHỆ <span class="timer">~1.5 phút</span></h2>
+            <p><i>Mở VS Code hoặc Terminal, show cấu trúc cho giám khảo thấy tổng quan:</i></p>
+
+            <div class="phase">
+                <h3>Bước 1: Giới thiệu công nghệ cốt lõi &amp; Prometheus Targets</h3>
+                <div class="say">"Hệ thống sử dụng <b>Prometheus</b> làm cơ sở dữ liệu lưu trữ metrics theo dạng Pull-based. Trên giao diện Prometheus, khi truy cập vào <b>Status -> Targets</b>, ta sẽ thấy trạng thái <b>UP (Healthy)</b> của <code>windows_exporter</code> — điều này chứng minh Prometheus đang kéo metrics thành công từ máy chủ Windows. Đồng thời, các cảnh báo được quản lý tập trung qua **Alertmanager** hoặc **Grafana Alerting**, tự động bắn Webhook về Backend. Ở Backend, **Ollama/Gemini** đóng vai trò AI Agent để phân tích và ra quyết định tự động."</div>
+            </div>
+
+            <div class="phase">
+                <h3>Bước 2: Show cấu trúc thư mục</h3>
+                <p>Gõ lệnh: <code>tree /F /A</code> hoặc chỉ trực tiếp trên VS Code Explorer.</p>
+                <div class="say">"Dự án của em gồm 4 thư mục chính: agent_api chứa Backend FastAPI, tools/powershell
+                    chứa script sửa lỗi, demo_scripts chứa các kịch bản test, và observability chứa cấu hình Prometheus
+                    & Grafana."</div>
+            </div>
+
+            <div class="phase">
+                <h3>Bước 3: Mở Grafana Dashboard (nếu đang chạy)</h3>
+                <p>Mở trình duyệt: <code>http://localhost:3000</code></p>
+                <div class="say">"Đây là Dashboard giám sát Windows Server của em trên Grafana. Các biểu đồ hiển thị
+                    CPU, RAM, Disk Usage theo thời gian thực. Khi bất kỳ chỉ số nào vượt ngưỡng, Grafana sẽ tự động bắn
+                    Webhook cảnh báo về Backend API."</div>
+            </div>
+
+            <div class="phase">
+                <h3>Bước 4: Show các file source code quan trọng</h3>
+                <table>
+                    <tr>
+                        <th>File cần mở</th>
+                        <th>Dòng cần chỉ</th>
+                        <th>Nói gì</th>
+                    </tr>
+                    <tr>
+                        <td><code>agent_api/app/main.py</code></td>
+                        <td>Dòng 56-59 (<code>ALLOWED_TOOLS</code>)</td>
+                        <td>"Đây là danh sách trắng Whitelist, chỉ cho phép 2 script chạy"</td>
+                    </tr>
+                    <tr>
+                        <td><code>agent_api/app/main.py</code></td>
+                        <td>Dòng 101-138 (<code>run_script</code>)</td>
+                        <td>"Circuit Breaker: nếu tool không nằm trong Whitelist → từ chối ngay"</td>
+                    </tr>
+                    <tr>
+                        <td><code>agent_api/app/main.py</code></td>
+                        <td>Dòng 64-72 (<code>prompt_template</code>)</td>
+                        <td>"Prompt Template ép AI trả JSON chuẩn, tuân thủ Playbook RAG"</td>
+                    </tr>
+                    <tr>
+                        <td><code>agent_api/app/main.py</code></td>
+                        <td>Dòng 439-484 (Phân nhánh SMALL/MEDIUM/CRITICAL)</td>
+                        <td>"3 nhánh xử lý: SMALL tự sửa, MEDIUM chờ duyệt, CRITICAL chỉ cảnh báo"</td>
+                    </tr>
+                    <tr>
+                        <td><code>agent_api/.env</code></td>
+                        <td>Toàn bộ</td>
+                        <td>"File cấu hình Secret, không đẩy lên GitHub nhờ .gitignore"</td>
+                    </tr>
+                    <tr>
+                        <td><code>tools/powershell/cleanup_temp_files.ps1</code></td>
+                        <td>Hàm <code>Is-AllowedPath</code></td>
+                        <td>"Script chỉ cho phép xóa file trong thư mục Temp an toàn"</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============ PHẦN 3: DEMO LIVE ============ -->
+        <div class="section" id="phan3">
+            <h2>🎬 PHẦN 3: LIVE DEMO <span class="timer">~3.5 phút</span></h2>
+            <p><i>Chuẩn bị: Terminal Docker đang chạy + Terminal PowerShell để gõ lệnh + Telegram trên điện thoại.</i>
+            </p>
+
+            <div class="phase">
+                <h3><span class="badge b-demo">Demo 1</span> Lỗi SMALL — Tự động sửa (1 phút)</h3>
+                <p>Lệnh: <code>powershell -ExecutionPolicy Bypass -File .\demo_scripts\demo_small_error.ps1</code></p>
+                <div class="say">"Em giả lập ổ đĩa C sắp đầy. Hệ thống nhận webhook, AI đánh giá SMALL, tự gọi script
+                    cleanup_temp_files dọn rác. Telegram nhận được báo cáo 'Tự động xử lý thành công' — không có nút bấm
+                    vì không cần duyệt."</div>
+                <div class="file-ref">
+                    <b>👉 Giải thích Source Code:</b>
+                    <ul>
+                        <li><b>Prompt cho script AI:</b> <code class="b-code">main.py (dòng 64-72)</code> (biến <code>prompt_template</code>).</li>
+                        <li><b>Hàm chạy Script:</b> <code class="b-code">main.py (dòng 101-138)</code> (hàm <code>run_script</code>).</li>
+                        <li><b>Phân nhánh SMALL:</b> <code class="b-code">main.py (dòng 439-470)</code> (AI tự động chạy script).</li>
+                        <li><b>Lưu Database:</b> <code class="b-code">database.py (dòng 122-160)</code> (hàm <code>insert_agent_task</code>).</li>
+                    </ul>
+                </div>
+                <p><b>👉 Show:</b> Log Docker hiện <code>Severity: SMALL. Status: executed</code> + Telegram báo cáo
+                    không nút bấm.</p>
+            </div>
+
+            <div class="phase">
+                <h3><span class="badge b-demo">Demo 2</span> Lỗi MEDIUM — Human-in-the-loop (1.5 phút)</h3>
+                <p>Lệnh: <code>powershell -ExecutionPolicy Bypass -File .\demo_scripts\demo_medium_error.ps1</code></p>
+                <div class="say">"CPU quá tải. AI đề xuất restart service nhưng treo Pending chờ duyệt. Telegram hiện 2
+                    nút Phê duyệt / Từ chối. Bây giờ em bấm Phê duyệt..."</div>
+                <div class="file-ref">
+                    <b>👉 Giải thích Source Code:</b>
+                    <ul>
+                        <li><b>Phân nhánh MEDIUM:</b> <code class="b-code">main.py (dòng 471-476)</code> (Treo trạng thái 'pending' và gửi Telegram).</li>
+                        <li><b>Webhook Telegram nhận duyệt:</b> <code class="b-code">main.py (dòng 554-631)</code> (hàm <code>telegram_webhook</code>).</li>
+                        <li><b>Cập nhật Database:</b> <code class="b-code">database.py (dòng 162-181)</code> (hàm <code>update_agent_task_status</code>).</li>
+                    </ul>
+                </div>
+                <p><b>👉 Show:</b> Bấm Approve trên Telegram → nút biến mất → hiện kết quả thực thi.</p>
+                <div class="say">"Sau khi em duyệt, Backend gọi editMessageText xóa nút bấm, tránh bấm nhầm lần 2. Đây
+                    là cơ chế chống Race Condition."</div>
+            </div>
+
+            <div class="phase">
+                <h3><span class="badge b-demo">Demo 3</span> Tấn công Hacker / Lỗi CRITICAL (1 phút)</h3>
+                <p>Lệnh: <code>powershell -ExecutionPolicy Bypass -File .\demo_scripts\demo_hacker_injection.ps1</code>
+                </p>
+                <div class="say">"Hacker chèn lệnh rm -rf / vào payload Grafana. Quý thầy cô xem log Docker: lệnh bị
+                    Whitelist chặn đứng, không có script nào được thực thi. Hệ thống an toàn tuyệt đối."</div>
+                <div class="file-ref">
+                    <b>👉 Giải thích Source Code:</b>
+                    <ul>
+                        <li><b>Phân nhánh CRITICAL:</b> <code class="b-code">main.py (dòng 477-484)</code> (Chỉ gửi báo động, không tự sửa).</li>
+                        <li><b>Bảo vệ Whitelist:</b> <code class="b-code">main.py (dòng 106-107)</code> (Chặn lệnh nếu không có trong ALLOWED_TOOLS).</li>
+                        <li><b>Ghi Audit Log:</b> <code class="b-code">database.py (dòng 197-256)</code> (hàm <code>insert_audit_log</code> lưu bằng chứng).</li>
+                    </ul>
+                </div>
+                <p><b>👉 Show:</b> Log Docker hiện <code>ERROR: Tool 'rm -rf /' is not in ALLOWED_TOOLS whitelist</code>
+                </p>
+            </div>
+        </div>
+        <!-- ============ PHẦN 4: Q&A ============ -->
+
+        <!-- NHÓM 1: NỘI DUNG BÁO CÁO -->
+        <div class="section" id="qa-baocao">
+            <h2>📝 Nhóm 1: Câu hỏi về Nội dung Báo cáo</h2>
+
+            <div class="qa-card">
+                <div class="qa-q">Q: Tại sao chọn FastAPI mà không phải Flask hoặc Django?</div>
+                <div class="qa-a"><b>Trả lời:</b> FastAPI hỗ trợ async ngay từ đầu và có sẵn <code>BackgroundTasks</code> để đẩy tác vụ nặng ra nền. Flask thiếu tính năng này. Django thì quá nặng cho một Webhook API đơn giản. FastAPI cũng tự sinh tài liệu API (Swagger) tại <code>/docs</code>.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Hệ thống tự giám sát (self-monitoring) của em cụ thể là giám sát những gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Hệ thống tập trung giám sát 3 tầng của máy chủ Windows:
+                    <br>1. <b>Tài nguyên phần cứng (OS Metrics):</b> CPU load, RAM, dung lượng ổ đĩa (Disk C:), băng thông mạng thông qua <code>windows_exporter</code> thu thập gửi về Prometheus.
+                    <br>2. <b>Trạng thái các dịch vụ core (Service Health):</b> Cảnh báo khi các Service quan trọng (như Spooler, Docker, IIS) bị tắt hoặc treo.
+                    <br>3. <b>Log hệ thống (System Logs):</b> Lấy trực tiếp Windows Event Logs trong 15 phút gần nhất (dòng 141-182 trong <code>main.py</code>) để cung cấp cho AI làm ngữ cảnh chẩn đoán nguyên nhân gốc rễ.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: RAG hoạt động như thế nào trong hệ thống?</div>
+                <div class="qa-a"><b>Trả lời:</b> Khi có cảnh báo, Backend truy vấn ChromaDB bằng tiêu đề lỗi để tìm Playbook phù hợp nhất. Playbook được nhúng vào Prompt gửi cho Gemini, ép AI tuân theo quy trình nội bộ. Sau mỗi lần xử lý thành công, hệ thống tự nạp ngược bài học vào ChromaDB (Self-Learning RAG).</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Prompt Injection là gì và hệ thống phòng thủ thế nào?</div>
+                <div class="qa-a"><b>Trả lời:</b> Prompt Injection là kỹ thuật hacker chèn lệnh vào dữ liệu đầu vào để lừa AI. Em phòng thủ 2 lớp: (1) Prompt template ép AI chỉ trả JSON chuẩn; (2) Backend có <code>ALLOWED_TOOLS</code> Whitelist chặn cứng mọi lệnh không hợp lệ — kể cả khi AI bị lừa.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Em đánh giá điểm mạnh nhất và điểm yếu nhất của đồ án?</div>
+                <div class="qa-a"><b>Trả lời:</b> <b>Điểm mạnh:</b> Kiến trúc phòng vệ 2 lớp (AI + Whitelist) đảm bảo an toàn tuyệt đối, RAG Self-Learning giúp AI tiến hóa liên tục. <b>Điểm yếu:</b> Hiện tại chỉ quản lý 1 máy chủ đơn lẻ, chưa hỗ trợ hạ tầng phân tán quy mô doanh nghiệp.</div>
+            </div>
+        </div>
+
+        <!-- NHÓM 2: CÂU HỎI VỀ MAIN.PY -->
+        <div class="section" id="qa-mainpy">
+            <h2>🐍 Nhóm 2: Câu hỏi về <code>main.py</code></h2>
+
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 50-54 — Cấu hình AI model có ý nghĩa gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Block <code>llm = ChatGoogleGenerativeAI(...)</code> khởi tạo kết nối tới Gemini 3.1 Flash Lite với <code>temperature=0.2</code>. Temperature thấp giúp AI ổn định nhưng vẫn giữ chút linh hoạt, không cứng nhắc như 0 tuyệt đối.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 56-59 — ALLOWED_TOOLS là gì? Tại sao chỉ có 2 script?</div>
+                <div class="qa-a"><b>Trả lời:</b> Đây là <b>danh sách trắng (Whitelist)</b>, chỉ cho phép 2 lệnh: <code>cleanup_temp_files</code> và <code>restart_service</code>. Mọi lệnh khác — kể cả do AI đề xuất — đều bị từ chối. Đây là lớp phòng vệ cứng nhất của hệ thống.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 64-72 — Prompt Template ép AI trả kết quả kiểu gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Prompt ép AI phải trả JSON thuần với 3 key: <code>severity_assessment</code>, <code>root_cause_analysis</code>, <code>suggested_action</code>. Ràng buộc severity chỉ được SMALL/MEDIUM/CRITICAL, action phải nằm trong whitelist. Không được trả markdown hay giải thích thêm.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 74-79 — TRIAGE_POLICY dùng để làm gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Đây là bảng định tuyến O(1) tra cứu nhanh. Mỗi loại alert được gán sẵn severity cứng: <code>Windows Server Down → CRITICAL</code>, <code>CPU High → MEDIUM</code>, <code>C: Drive Low → SMALL</code>. Dùng kết hợp với AI để đảm bảo routing chính xác.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 101-138 — Hàm run_script hoạt động thế nào?</div>
+                <div class="qa-a"><b>Trả lời:</b> Đầu tiên kiểm tra <b>Circuit Breaker</b> (dòng 106-107): nếu tool không nằm trong ALLOWED_TOOLS → từ chối ngay. Nếu hợp lệ, build command PowerShell, map tham số an toàn, chạy với timeout 15s. Trong Docker không có PowerShell sẽ trả kết quả giả lập (dòng 131-133).</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 186-221 — Hàm query_rag_context làm gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Truy vấn ChromaDB lấy Playbook phù hợp nhất với tiêu đề lỗi. Nếu ChromaDB chưa có dữ liệu, fallback sang quy tắc cứng: disk → SMALL, down → CRITICAL, còn lại → MEDIUM. Trả về cả nội dung Playbook và URN tham chiếu.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 226-333 — Hàm call_llm_triage phức tạp thế nào?</div>
+                <div class="qa-a"><b>Trả lời:</b> Gọi Gemini phân loại lỗi. Bước 1: trích xuất mô tả từ payload. Bước 2: lấy Event Logs Windows. Bước 3: gọi LLM Chain. Bước 4: parse JSON bằng Pydantic. Bước 5: <b>Demo Safety Routing</b> (dòng 286-296) ép severity chính xác cho demo. Cuối cùng kiểm duyệt whitelist. Nếu mọi thứ fail → Fallback Rules (dòng 308-333).</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 381-401 — learn_from_resolution là gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Đây là cơ chế <b>Self-Learning RAG</b>. Sau mỗi lần xử lý sự cố thành công, hệ thống tự tạo document mới và upsert vào ChromaDB. Lần sau gặp lỗi tương tự, AI sẽ tìm được bài học này qua RAG.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 439-484 — Phân nhánh SMALL/MEDIUM/CRITICAL khác nhau thế nào?</div>
+                <div class="qa-a"><b>Trả lời:</b> <b>SMALL (439-470):</b> Tự động chạy script + gửi Telegram báo cáo không có nút bấm. <b>MEDIUM (471-476):</b> Treo pending, gửi Telegram có 2 nút Approve/Reject. <b>CRITICAL (477-484):</b> Chỉ gửi cảnh báo khẩn cấp, không tự sửa.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 530-551 — Endpoint webhook nhận alert thế nào?</div>
+                <div class="qa-a"><b>Trả lời:</b> Endpoint <code>POST /api/v1/alerts/webhook</code> nhận payload từ Grafana, ghi nhận thời gian T0, tạo Alert ID duy nhất, rồi đẩy toàn bộ xử lý vào <code>BackgroundTasks</code>. Phản hồi 200 OK ngay lập tức cho Grafana không bị timeout.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 554-631 — Webhook Telegram xử lý nút bấm ra sao?</div>
+                <div class="qa-a"><b>Trả lời:</b> Nhận callback_query khi Admin bấm Approve/Reject. Kiểm tra task có đang pending không (chống bấm 2 lần). Nếu Approve → gọi <code>run_script</code> thực thi. Sau đó gọi <code>editMessageText</code> xóa nút bấm cũ để tránh Race Condition.</div>
+            </div>
+        </div>
+
+        <!-- NHÓM 3: CÂU HỎI VỀ DATABASE.PY -->
+        <div class="section" id="qa-dbpy">
+            <h2>🗄️ Nhóm 3: Câu hỏi về <code>database.py</code></h2>
+
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 29-48 — get_db_connection hỗ trợ bao nhiêu loại DB?</div>
+                <div class="qa-a"><b>Trả lời:</b> Hỗ trợ 2 loại: <b>PostgreSQL</b> (cho production/cloud) và <b>SQLite</b> (cho local/demo). Biến <code>IS_POSTGRES</code> (dòng 24) tự phát hiện dựa trên biến môi trường <code>DATABASE_URL</code> hoặc <code>DB_HOST</code>.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 51-119 — init_db tạo những bảng gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Tạo 2 bảng: <b>agent_tasks</b> (lưu thông tin task: severity, proposed_action, status) và <b>audit_logs</b> (lưu RAG context, decision reason, execution result, token count). Bảng audit_logs có FK tới agent_tasks.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 122-160 — insert_agent_task lưu gì vào DB?</div>
+                <div class="qa-a"><b>Trả lời:</b> Lưu bản ghi task mới gồm: task_id, alert_title, labels (JSON), severity, proposed_action, status, và timestamp. Hàm này được gọi ở dòng 430 trong main.py ngay khi bắt đầu xử lý alert.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 162-181 — update_agent_task_status dùng ở đâu?</div>
+                <div class="qa-a"><b>Trả lời:</b> Được gọi mỗi khi status thay đổi: từ <code>received → executed</code> (SMALL), <code>received → pending</code> (MEDIUM), <code>received → notified</code> (CRITICAL), hoặc <code>pending → executed/rejected</code> (sau khi Admin duyệt qua Telegram).</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 183-194 — get_agent_task dùng khi nào?</div>
+                <div class="qa-a"><b>Trả lời:</b> Dùng trong Telegram webhook (main.py dòng 577) để kiểm tra task có tồn tại không và status hiện tại có phải pending/notified không — tránh duyệt 2 lần (Race Condition).</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Dòng 197-256 — insert_audit_log ghi nhận những gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Ghi log đầy đủ: RAG context đã dùng, tham chiếu URN, lý do quyết định, kết quả thực thi, thời gian xử lý (ms), và <b>token tiêu thụ</b> (prompt_tokens + completion_tokens) để theo dõi chi phí LLM.</div>
+            </div>
+        </div>
+
+        <!-- NHÓM 4: CÔNG NGHỆ & THIẾT BỊ -->
+        <div class="section" id="qa-tools">
+            <h2>🔧 Nhóm 4: Công nghệ &amp; Thiết bị sử dụng</h2>
+
+            <div class="qa-card">
+                <div class="qa-q">Q: Tại sao chọn Gemini mà không phải GPT-4 hoặc Claude?</div>
+                <div class="qa-a"><b>Trả lời:</b> Gemini 3.1 Flash Lite có giá API thấp nhất thị trường, tốc độ phản hồi nhanh nhất (SLA &lt; 30s), đủ chính xác cho bài toán phân loại có RAG. GPT-4 đắt hơn 10-50 lần mà không vượt trội cho use case này.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Temperature = 0.2 nghĩa là gì? Sao không để 0?</div>
+                <div class="qa-a"><b>Trả lời:</b> Temperature kiểm soát tính ngẫu nhiên của AI. 0.2 rất ổn định nhưng giữ chút linh hoạt. Để 0 tuyệt đối thì câu trả lời quá cứng nhắc, đôi khi lặp lại y hệt và mất suy luận ngữ cảnh.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Nếu API Google bị mất mạng thì hệ thống có chết không?</div>
+                <div class="qa-a"><b>Trả lời:</b> Không. Em có <b>Fallback Rules</b> trong hàm <code>call_llm_triage</code> (main.py dòng 308-333). Khi API lỗi, hệ thống tự phân loại dựa trên từ khóa: disk → SMALL, down → CRITICAL, cpu → MEDIUM.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: BackgroundTasks chạy trong bộ nhớ, server crash thì sao?</div>
+                <div class="qa-a"><b>Trả lời:</b> Đây là hạn chế của MVP. Production sẽ nâng cấp lên <b>Celery + Redis</b> để đảm bảo Persistence kể cả khi server restart.</div>
+            </div>
+        </div>
+
+        <!-- NHÓM 5: TỐI ƯU & MỞ RỘNG -->
+        <div class="section" id="qa-optimize">
+            <h2>⚡ Nhóm 5: Tối ưu &amp; Mở rộng</h2>
+
+            <div class="qa-card">
+                <div class="qa-q">Q: Dự án có ứng dụng thực tế gì cho doanh nghiệp?</div>
+                <div class="qa-a"><b>Trả lời:</b> Doanh nghiệp vừa và nhỏ không đủ ngân sách thuê kỹ sư trực 24/7. AutoOps thay thế với chi phí ~1.5 USD/tháng: giám sát liên tục, tự dọn rác, restart dịch vụ, cảnh báo khẩn qua Telegram.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Scale lên 50-100 máy chủ thì cần thay đổi gì?</div>
+                <div class="qa-a"><b>Trả lời:</b> Thay PowerShell cục bộ bằng <b>Ansible</b> hoặc <b>Kubernetes API</b>. Tích hợp <b>Grafana Loki + Promtail</b> để gom log tập trung. Backend giữ nguyên kiến trúc, chỉ thay đổi lớp thực thi.</div>
+            </div>
+            <div class="qa-card">
+                <div class="qa-q">Q: Làm sao tối ưu chi phí LLM thêm nữa?</div>
+                <div class="qa-a"><b>Trả lời:</b> Em đã theo dõi token qua <code>prompt_tokens</code> và <code>completion_tokens</code> trong audit_logs. Có thể tối ưu thêm bằng: (1) Cache RAG context tránh query lặp; (2) Dùng Ollama self-hosted thay API cloud; (3) Giảm prompt length bằng few-shot examples ngắn gọn.</div>
+            </div>
+        </div>
+
+        <p style="text-align:center;color:#94a3b8;margin-top:30px;">AutoOps Agent © 2026 — "Automate the predictable, solve the exceptional."</p>
+    </div>
+</body>
+
+</html>
