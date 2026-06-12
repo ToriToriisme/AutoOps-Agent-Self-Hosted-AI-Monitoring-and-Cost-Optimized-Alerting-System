@@ -133,11 +133,11 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            docker pull ghcr.io/${{ github.repository }}:latest
+            IMAGE_NAME=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+            echo "Pulling image: $IMAGE_NAME:latest"
+            docker pull $IMAGE_NAME:latest
             cd /opt/autoops-agent
-            docker-compose down
-            docker-compose up -d
-
+            (docker compose down || docker-compose down) && (docker compose up -d || docker-compose up -d)
   health-check:
     name: CD - Health Check
     needs: deploy
