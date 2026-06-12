@@ -119,21 +119,12 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  cd-gate:
-    name: CD Gate - Manual Approval
+  deploy:
+    name: CD - Deploy Production
     needs: build-and-push
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: production
-    steps:
-      - name: Approval Confirmed
-        run: echo "Manual approval granted. Proceeding to deploy."
-
-  deploy:
-    name: CD - Deploy Production
-    needs: cd-gate
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
